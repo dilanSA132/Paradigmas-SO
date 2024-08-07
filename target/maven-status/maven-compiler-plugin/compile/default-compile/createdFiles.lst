@@ -1,3 +1,5 @@
+module-info.class
+com\mycompany\paradigmas_so\GuideController.class
 com\mycompany\paradigmas_so\App.class
 com\mycompany\paradigmas_so\MenuController.class
-module-info.class
+com\mycompany\paradigmas_so\AboutController.class

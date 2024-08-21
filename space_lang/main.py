@@ -39,7 +39,7 @@ def main():
 
     parser = Parser(tokens)
     ast = parser.parse()
-    print("\n=== Abstract Syntax Tree (AST) ===")
+    print("\n=== Arbol estructurado (AST) ===")
     for node in ast:
         print(node)
 

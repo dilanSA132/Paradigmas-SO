@@ -39,7 +39,7 @@ def main():
 
     star "Valor booleano falso" varBoolFalse.
     """
-
+    
     lexer = Lexer(source_code)
     tokens = lexer.tokenize()
     print("=== Tokens ===")

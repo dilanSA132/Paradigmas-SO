@@ -30,6 +30,15 @@ class Lexer:
             ('NEWLINE', r'\n'),
             ('SKIP', r'[ \t]+'),
             ('MISMATCH', r'.'),
+            ('STARDOCK', r'stardock'),  
+            ('STARPATH', r'starpath'), 
+            ('SUPERNOVA'r'supernova'),     
+            ('LCURLYBRACK', r'\{'),          
+            ('DCURLYBRACK', r'\}'),        
+            ('GREATER', r'\>'),             
+            ('LESS', r'\<'),                
+            ('GREATEREQ', r'\>'),         
+            ('LESSEQ', r'\>'),            
         ]
         self.token_regex = '|'.join('(?P<%s>%s)' % pair for pair in self.token_specification)
 

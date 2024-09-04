@@ -33,6 +33,8 @@ def main():
     orbit i 1 5.
         star "Iteración número" i.
     endOrbit.
+    
+    star "Valor booleano falso" varBoolFalse.
 
     """
 

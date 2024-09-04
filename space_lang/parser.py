@@ -12,33 +12,52 @@ class Parser:
         return statements
 
     def parse_statement(self):
-        while self.pos < len(self.tokens):
-            token = self.tokens[self.pos]
+        token = self.tokens[self.pos]
 
-            if token[0] == 'NEWLINE':
-                self.pos += 1
-                continue  
+        if token[0] == 'NEWLINE':
+            self.pos += 1
+            return None
 
-            if token[0] == 'PLANET':
-                self.pos += 1
-                var_type = self.tokens[self.pos][0]
-                self.pos += 1
-                var_name = self.tokens[self.pos][1]
-                self.pos += 1
-                self.pos += 1 
-                expr = self.parse_expression()
-                self.pos += 1  
-                return ('declare', var_type, var_name, expr)
+        if token[0] == 'PLANET':
+            self.pos += 1
+            var_type = self.tokens[self.pos][0]
+            self.pos += 1
+            var_name = self.tokens[self.pos][1]
+            self.pos += 1
+            self.pos += 1  # Saltar el token '='
+            expr = self.parse_expression()
+            self.pos += 1  # Saltar el token 'END'
+            return ('declare', var_type, var_name, expr)
 
-            elif token[0] == 'ID' and token[1] == 'star':
-                self.pos += 1  # Skip star
-                message = self.parse_expression()
-                expr = self.parse_expression()
-                self.pos += 1  
-                return ('print', message, expr)
+        elif token[0] == 'ID' and token[1] == 'star':
+            self.pos += 1  # Saltamos el token 'star'
+            message = self.parse_expression()
+            expr = self.parse_expression()
+            self.pos += 1  # Saltamos el token 'END'
+            return ('print', message, expr)
 
-            else:
-                raise SyntaxError(f'Unexpected token: {token}')
+        elif token[0] == 'ORBIT':
+            self.pos += 1  # Saltamos el token 'orbit'
+            var_name = self.tokens[self.pos][1]
+            self.pos += 1  # Saltamos el nombre de la variable
+            start_expr = self.parse_expression()
+            end_expr = self.parse_expression()
+            self.pos += 1  # Saltamos el token 'END' después de las expresiones de rango
+            block = self.parse_block('END_ORBIT')  # Aseguramos que el ciclo termine con 'endOrbit.'
+            return ('orbit', var_name, start_expr, end_expr, block)
+
+        else:
+            raise SyntaxError(f'Unexpected token: {token}')
+
+    def parse_block(self, end_token):
+        """Parses a block of code until it finds the end_token (e.g., 'END_ORBIT')"""
+        block = []
+        while self.tokens[self.pos][0] != end_token:
+            statement = self.parse_statement()
+            if statement:
+                block.append(statement)
+        self.pos += 1  # Saltar el end_token, que incluye el punto.
+        return block
 
     def parse_expression(self):
         left = self.parse_term()
@@ -69,7 +88,7 @@ class Parser:
             return ('var', token[1])
         elif token[0] == 'LPAREN':
             expr = self.parse_expression()
-            self.pos += 1  
+            self.pos += 1  # Saltar el token ')'
             return expr
         else:
-            raise SyntaxError('Invalid expression')
+            raise SyntaxError(f'Invalid expression: {token}')

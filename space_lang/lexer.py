@@ -12,6 +12,8 @@ class Lexer:
             ('EARTH', r'earth'),            # int
             ('MARS', r'mars'),              # bool
             ('JUPITER', r'jupiter'),        # double
+            ('ORBIT', r'orbit'),            # Ciclo for
+            ('END_ORBIT', r'endOrbit\.'),   # Fin del ciclo 'orbit' con punto
             ('STRING', r'"[^"]*"'),         # Cadenas de texto
             ('ID', r'[A-Za-z_]\w*'),        # Identificadores
             ('NUMBER', r'\d+\.\d+|\d+'),    # Números (float/int)
@@ -37,7 +39,7 @@ class Lexer:
             if kind == 'NUMBER':
                 value = float(value) if '.' in value else int(value)
             elif kind == 'STRING':
-                value = value[1:-1] 
+                value = value[1:-1]
             elif kind in ('SKIP', 'COMMENT'):
                 continue
             elif kind == 'MISMATCH':

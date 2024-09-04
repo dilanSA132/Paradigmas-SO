@@ -29,6 +29,11 @@ def main():
     star "Mensaje en cadena" varString.
     star "Valor booleano verdadero" varBoolTrue.
     star "Valor booleano falso" varBoolFalse.
+
+    orbit i 1 5.
+        star "Iteración número" i.
+    endOrbit.
+
     """
 
     lexer = Lexer(source_code)

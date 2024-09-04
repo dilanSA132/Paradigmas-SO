@@ -19,8 +19,18 @@ class Interpretar:
             _, message, expr = statement
             value = self.evaluate_expression(expr)
             if value is None:
-                value = "None"  
+                value = "None"
             print(f"{message}: {value}")
+
+        elif stmt_type == 'orbit':
+            _, var_name, start_expr, end_expr, block = statement
+            start_value = self.evaluate_expression(start_expr)
+            end_value = self.evaluate_expression(end_expr)
+
+            for i in range(start_value, end_value + 1):
+                self.variables[var_name] = i
+                for stmt in block:
+                    self.execute_statement(stmt)
 
     def evaluate_expression(self, expr):
         if isinstance(expr, tuple):

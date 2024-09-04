@@ -29,6 +29,15 @@ class Parser:
             self.pos += 1  
             return ('declare', var_type, var_name, expr)
 
+        elif token[0] == 'STELLAR':
+            self.pos += 1
+            var_name = self.tokens[self.pos][1]
+            self.pos += 1  
+            self.pos += 1  
+            expr_list = self.parse_list()
+            self.pos += 1  
+            return ('declare_vector', var_name, expr_list)
+
         elif token[0] == 'ID' and token[1] == 'star':
             self.pos += 1  
             message = self.parse_expression()
@@ -50,7 +59,6 @@ class Parser:
             raise SyntaxError(f'Unexpected token: {token}')
 
     def parse_block(self, end_token):
-        """Parses a block of code until it finds the end_token (e.g., 'END_ORBIT')"""
         block = []
         while self.tokens[self.pos][0] != end_token:
             statement = self.parse_statement()
@@ -85,10 +93,25 @@ class Parser:
         elif token[0] == 'STRING':
             return ('string', token[1])
         elif token[0] == 'ID':
+            if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'LPAREN': 
+                self.pos += 1  
+                index_expr = self.parse_expression()  
+                self.pos += 1  
+                return ('index_access', token[1], index_expr)
             return ('var', token[1])
         elif token[0] == 'LPAREN':
             expr = self.parse_expression()
-            self.pos += 1 
+            self.pos += 1  
             return expr
         else:
             raise SyntaxError(f'Invalid expression: {token}')
+
+    def parse_list(self):
+        elements = []
+        self.pos += 1  
+        while self.tokens[self.pos][0] != 'RPAREN':  
+            elements.append(self.parse_expression())
+            if self.tokens[self.pos][0] == 'COMMA':
+                self.pos += 1  
+        self.pos += 1  
+        return elements

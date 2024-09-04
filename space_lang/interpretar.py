@@ -15,12 +15,20 @@ class Interpretar:
             value = self.evaluate_expression(expr)
             self.variables[var_name] = value
 
+        elif stmt_type == 'declare_vector':
+            _, var_name, expr_list = statement
+            value_list = [self.evaluate_expression(expr) for expr in expr_list]
+            self.variables[var_name] = value_list
+
         elif stmt_type == 'print':
             _, message, expr = statement
             value = self.evaluate_expression(expr)
-            if value is None:
-                value = "None"
-            print(f"{message}: {value}")
+            if isinstance(value, list):
+                print(f"{message}: {', '.join(map(str, value))}")
+            elif value is None:
+                print(f"{message}: None")
+            else:
+                print(f"{message}: {value}")
 
         elif stmt_type == 'orbit':
             _, var_name, start_expr, end_expr, block = statement
@@ -48,6 +56,15 @@ class Interpretar:
                 elif expr[1] == 'false':
                     return False
                 return self.variables.get(expr[1], None)
+
+            elif expr_type == 'index_access':
+                vector_name = expr[1]
+                index = self.evaluate_expression(expr[2])  
+                vector = self.variables.get(vector_name, None)
+                if isinstance(vector, list) and 0 <= index < len(vector):
+                    return vector[index]
+                else:
+                    raise IndexError(f'Index {index} out of bounds for vector {vector_name}')
 
             elif expr_type == 'plus':
                 return self.evaluate_expression(expr[1]) + self.evaluate_expression(expr[2])

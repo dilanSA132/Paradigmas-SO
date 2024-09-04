@@ -30,12 +30,14 @@ def main():
     star "Valor booleano verdadero" varBoolTrue.
     star "Valor booleano falso" varBoolFalse.
 
-    orbit i 1 5.
-        star "Iteración número" i.
-    endOrbit.
-    
-    star "Valor booleano falso" varBoolFalse.
+    Stellar myVector = [1, 2, 3, 4, 5].
+    star "Impresión del vector" myVector.
 
+    orbit j 0 4.
+        star "Elemento del vector" myVector[j].
+    endOrbit.
+
+    star "Valor booleano falso" varBoolFalse.
     """
 
     lexer = Lexer(source_code)

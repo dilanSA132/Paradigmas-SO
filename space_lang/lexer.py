@@ -32,7 +32,7 @@ class Lexer:
             ('MISMATCH', r'.'),
             ('STARDOCK', r'stardock'),  
             ('STARPATH', r'starpath'), 
-            ('SUPERNOVA'r'supernova'),     
+            ('SUPERNOVA',r'supernova'),     
             ('LCURLYBRACK', r'\{'),          
             ('DCURLYBRACK', r'\}'),        
             ('GREATER', r'\>'),             

@@ -39,8 +39,13 @@ def main():
 
     star "Valor booleano falso" varBoolFalse.
     """
-    
-    lexer = Lexer(source_code)
+    source_code1 = """
+    planet earth var1 = 4.
+    planet earth var2 = 5.
+    planet earth resultIntSum = var1 + var2. 
+    star "Resultado de suma de enteros" resultIntSum.
+    """
+    lexer = Lexer(source_code1)
     tokens = lexer.tokenize()
     print("=== Tokens ===")
     for token in tokens:

@@ -21,17 +21,33 @@ class Parser:
 
             if token[0] == 'PLANET':
                 self.pos += 1
+                if self.tokens[self.pos][0] not in ('MERCURY', 'VENUS', 'EARTH', 'MARS', 'JUPITER'):
+                    raise SyntaxError(f"Expected a valid type after 'planet', got {self.tokens[self.pos][0]}")
+                
                 var_type = self.tokens[self.pos][0]
                 self.pos += 1
+
+                if self.tokens[self.pos][0] != 'ID':
+                    raise SyntaxError(f"Expected an identifier after type {var_type}, got {self.tokens[self.pos][0]}")
+                
                 var_name = self.tokens[self.pos][1]
                 self.pos += 1
+
+                if self.tokens[self.pos][0] != 'ASSIGN':
+                    raise SyntaxError(f"Expected '=' after variable name {var_name}, got {self.tokens[self.pos][0]}")
+                
                 self.pos += 1 
+                
                 expr = self.parse_expression()
+
+                if self.tokens[self.pos][0] != 'END':
+                    raise SyntaxError(f"Expected '.' at the end of the statement, got {self.tokens[self.pos][0]}")
+
                 self.pos += 1  
                 return ('declare', var_type, var_name, expr)
 
             elif token[0] == 'ID' and token[1] == 'star':
-                self.pos += 1  # Skip star
+                self.pos += 1  
                 message = self.parse_expression()
                 expr = self.parse_expression()
                 self.pos += 1  
@@ -72,4 +88,4 @@ class Parser:
             self.pos += 1  
             return expr
         else:
-            raise SyntaxError('Invalid expression')
+            raise SyntaxError(f'Invalid expression: {token}')

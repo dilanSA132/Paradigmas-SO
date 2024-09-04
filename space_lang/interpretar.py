@@ -13,6 +13,16 @@ class Interpretar:
         if stmt_type == 'declare':
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
+
+            if var_type == 'earth' and not isinstance(value, int):
+                raise TypeError(f"Expected an integer for variable {var_name}, but got {value}")
+            elif var_type == 'mercury' and not isinstance(value, float):
+                raise TypeError(f"Expected a float for variable {var_name}, but got {value}")
+            elif var_type == 'venus' and not isinstance(value, str):
+                raise TypeError(f"Expected a string for variable {var_name}, but got {value}")
+            elif var_type == 'mars' and not isinstance(value, bool):
+                raise TypeError(f"Expected a boolean for variable {var_name}, but got {value}")
+            
             self.variables[var_name] = value
 
         elif stmt_type == 'print':
@@ -37,7 +47,9 @@ class Interpretar:
                     return True
                 elif expr[1] == 'false':
                     return False
-                return self.variables.get(expr[1], None)
+                if expr[1] not in self.variables:
+                    raise NameError(f"Variable '{expr[1]}' is not defined")
+                return self.variables.get(expr[1])
 
             elif expr_type == 'plus':
                 return self.evaluate_expression(expr[1]) + self.evaluate_expression(expr[2])

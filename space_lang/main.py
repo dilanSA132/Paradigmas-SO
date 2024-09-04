@@ -34,6 +34,8 @@ def main():
         star "Iteración número" i.
     endOrbit.
 
+    star "Valor booleano falso" varBoolFalse.
+    
     """
 
     lexer = Lexer(source_code)

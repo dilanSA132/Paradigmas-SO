@@ -1,6 +1,9 @@
+from lexer import Lexer
+from parser import Parser
+from interpretar import Interpretar
+
 def main():
     source_code = """
-    # Declaración de variables de diferentes tipos
     planet earth var1 = 4.
     planet earth var2 = 5.
     
@@ -15,29 +18,14 @@ def main():
     planet mars varBoolTrue = true.
     planet mars varBoolFalse = false.
 
-    # Sumas, multiplicaciones y otras operaciones
-    planet earth resultIntSum = var1 + var2.  # Suma de enteros
-    planet mercury resultFloatSum = varFloat1 + varFloat2.  # Suma de floats
-    planet jupiter resultDoubleMul = varDouble1 * varDouble2.  # Multiplicación de doubles
+    planet earth resultIntSum = var1 + var2.  
 
-    # Prueba con restas
-    planet earth resultIntSub = var1 - var2.  # Resta de enteros
-    planet mercury resultFloatSub = varFloat1 - varFloat2.  # Resta de floats
+    planet mercury resultFloatSum = varFloat1 + varFloat2.
+    planet jupiter resultDoubleMul = varDouble1 * varDouble2.
 
-    # Prueba con divisiones
-    planet jupiter resultDoubleDiv = varDouble1 / varDouble2.  # División de doubles
-
-    # Prueba de errores de tipo
-    # planet earth wrongVar = "NotAnInt".  # Error: Asignar string a int
-    # planet mercury wrongVar2 = true.  # Error: Asignar booleano a float
-
-    # Impresión de resultados
     star "Resultado de suma de enteros" resultIntSum.
-    star "Resultado de resta de enteros" resultIntSub.
     star "Resultado de suma de floats" resultFloatSum.
-    star "Resultado de resta de floats" resultFloatSub.
     star "Resultado de multiplicación de doubles" resultDoubleMul.
-    star "Resultado de división de doubles" resultDoubleDiv.
     star "Mensaje en cadena" varString.
     star "Valor booleano verdadero" varBoolTrue.
     star "Valor booleano falso" varBoolFalse.

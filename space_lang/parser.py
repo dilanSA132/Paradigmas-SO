@@ -24,26 +24,26 @@ class Parser:
             self.pos += 1
             var_name = self.tokens[self.pos][1]
             self.pos += 1
-            self.pos += 1  # Saltar el token '='
+            self.pos += 1 
             expr = self.parse_expression()
-            self.pos += 1  # Saltar el token 'END'
+            self.pos += 1  
             return ('declare', var_type, var_name, expr)
 
         elif token[0] == 'ID' and token[1] == 'star':
-            self.pos += 1  # Saltamos el token 'star'
+            self.pos += 1  
             message = self.parse_expression()
             expr = self.parse_expression()
-            self.pos += 1  # Saltamos el token 'END'
+            self.pos += 1  
             return ('print', message, expr)
 
         elif token[0] == 'ORBIT':
-            self.pos += 1  # Saltamos el token 'orbit'
+            self.pos += 1  
             var_name = self.tokens[self.pos][1]
-            self.pos += 1  # Saltamos el nombre de la variable
+            self.pos += 1  
             start_expr = self.parse_expression()
             end_expr = self.parse_expression()
-            self.pos += 1  # Saltamos el token 'END' después de las expresiones de rango
-            block = self.parse_block('END_ORBIT')  # Aseguramos que el ciclo termine con 'endOrbit.'
+            self.pos += 1  
+            block = self.parse_block('END_ORBIT')  
             return ('orbit', var_name, start_expr, end_expr, block)
 
         else:
@@ -56,7 +56,7 @@ class Parser:
             statement = self.parse_statement()
             if statement:
                 block.append(statement)
-        self.pos += 1  # Saltar el end_token, que incluye el punto.
+        self.pos += 1  
         return block
 
     def parse_expression(self):
@@ -88,7 +88,7 @@ class Parser:
             return ('var', token[1])
         elif token[0] == 'LPAREN':
             expr = self.parse_expression()
-            self.pos += 1  # Saltar el token ')'
+            self.pos += 1 
             return expr
         else:
             raise SyntaxError(f'Invalid expression: {token}')

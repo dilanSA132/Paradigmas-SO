@@ -37,6 +37,17 @@ class Parser:
             expr_list = self.parse_list()
             self.pos += 1  
             return ('declare_vector', var_name, expr_list)
+        
+        elif token[0] == 'STARDOCK':
+            self.pos += 1
+            condition = self.parse_condition() 
+            print("LOL "+ condition[0])
+            #self.pos += 1 
+            block = self.parse_block('END_STARDOCK')
+            print("HOLAAA "+self.tokens[self.pos][0])
+            if self.tokens[self.pos][0] == 'END': 
+                self.pos += 1
+            return ('stardock', condition, block)
 
         elif token[0] == 'ID' and token[1] == 'star':
             self.pos += 1  
@@ -52,7 +63,8 @@ class Parser:
             start_expr = self.parse_expression()
             end_expr = self.parse_expression()
             self.pos += 1  
-            block = self.parse_block('END_ORBIT')  
+            block = self.parse_block('END_ORBIT') 
+            print(block) 
             return ('orbit', var_name, start_expr, end_expr, block)
 
         else:
@@ -60,13 +72,28 @@ class Parser:
 
     def parse_block(self, end_token):
         block = []
-        while self.tokens[self.pos][0] != end_token:
+        while self.pos < len(self.tokens) and self.tokens[self.pos][0] != end_token:
             statement = self.parse_statement()
             if statement:
                 block.append(statement)
-        self.pos += 1  
+        if self.tokens[self.pos][0] == end_token:
+            self.pos += 1  
+        else:
+            raise SyntaxError(f"Expected {end_token}, but got {self.tokens[self.pos]}")
         return block
 
+    def parse_condition(self):
+        left = self.parse_expression()
+        while self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('LESS', 'GREATER', 'EQUALS', 'NOTEQUAL'):
+            op = self.tokens[self.pos][0]
+            self.pos += 1
+            right = self.parse_expression()
+            left = (op.lower(), left, right)
+        if self.tokens[self.pos][0] == 'END':
+            self.pos += 1  
+        
+        return left
+    
     def parse_expression(self):
         left = self.parse_term()
         while self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('PLUS', 'MINUS'):

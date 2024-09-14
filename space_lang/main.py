@@ -4,7 +4,7 @@ from interpretar import Interpretar
 
 def main():
     source_code = """
-    planet earth var1 = 4.
+    planet earth var1 = 0.
     planet earth var2 = 5.
     
     planet mercury varFloat1 = 4.5.
@@ -40,10 +40,12 @@ def main():
     star "Valor booleano falso" varBoolFalse.
     """
     source_code1 = """
-    planet earth var1 = 4.
+    planet earth var1 = 5.
     planet earth var2 = 5.
     planet earth resultIntSum = var1 + var2. 
-    star "Resultado de suma de enteros" resultIntSum.
+    stardock var1 == var2. 
+        star "Resultado de suma de enteros" resultIntSum.
+    endStardock.
     """
     lexer = Lexer(source_code1)
     tokens = lexer.tokenize()

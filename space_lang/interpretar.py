@@ -40,6 +40,15 @@ class Interpretar:
                 for stmt in block:
                     self.execute_statement(stmt)
 
+        elif stmt_type == 'stardock':
+            _, condition, block = statement
+
+            condition_value = self.evaluate_expression(condition)
+            if condition_value:
+                for stmt in block:
+                    self.execute_statement(stmt)
+
+    
     def evaluate_expression(self, expr):
         if isinstance(expr, tuple):
             expr_type = expr[0]
@@ -77,6 +86,18 @@ class Interpretar:
 
             elif expr_type == 'divide':
                 return self.evaluate_expression(expr[1]) / self.evaluate_expression(expr[2])
+            
+            elif expr_type == 'less':
+                return self.evaluate_expression(expr[1]) < self.evaluate_expression(expr[2])
+
+            elif expr_type == 'greater':
+                return self.evaluate_expression(expr[1]) > self.evaluate_expression(expr[2])
+
+            elif expr_type == 'equals':
+                return self.evaluate_expression(expr[1]) == self.evaluate_expression(expr[2])
+
+            elif expr_type == 'notequal':
+                return self.evaluate_expression(expr[1]) != self.evaluate_expression(expr[2])
 
         elif isinstance(expr, (int, float, str)):
             return expr

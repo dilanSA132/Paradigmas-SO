@@ -30,15 +30,15 @@ def main():
     star "Valor booleano verdadero" varBoolTrue.
     star "Valor booleano falso" varBoolFalse.
 
-    Stellar myVector = [1, 2, 3, 4, 5].
+    Stellar myVector = [1, 2, 3, 4, 5,6].
     star "Impresión del vector" myVector.
 
     
-      orbit j 0 4.
+      orbit j 0 4 2.
         star "Elemento del vector" myVector[j].
     endOrbit.
 
-    orbit j 4 0.
+    orbit j 4 0 2.
         star "Elemento del vector" myVector[j].
     endOrbit.
 
@@ -55,7 +55,7 @@ def main():
         star "Resultado de suma de enteros" resultIntSum.
     endStardock.
     """
-    lexer = Lexer(source_code1)
+    lexer = Lexer(source_code)
     tokens = lexer.tokenize()
     print("=== Tokens ===")
     for token in tokens:

@@ -24,7 +24,7 @@ class Parser:
             self.pos += 1
             var_name = self.tokens[self.pos][1]
             self.pos += 1
-            self.pos += 1 
+            self.pos += 1  
             expr = self.parse_expression()
             self.pos += 1  
             return ('declare', var_type, var_name, expr)
@@ -59,9 +59,10 @@ class Parser:
             self.pos += 1  
             start_expr = self.parse_expression()
             end_expr = self.parse_expression()
+            interval_expr = self.parse_expression()  # Capturamos el intervalo
             self.pos += 1  
             block = self.parse_block('END_ORBIT') 
-            return ('orbit', var_name, start_expr, end_expr, block)
+            return ('orbit', var_name, start_expr, end_expr, interval_expr, block)  # Devolvemos el intervalo
 
         else:
             raise SyntaxError(f'Unexpected token: {token}')

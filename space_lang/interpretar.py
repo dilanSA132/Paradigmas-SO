@@ -31,21 +31,28 @@ class Interpretar:
                 print(f"{message}: {value}")
 
         elif stmt_type == 'orbit':
-            _, var_name, start_expr, end_expr, block = statement
+            _, var_name, start_expr, end_expr, interval_expr, block = statement
             start_value = self.evaluate_expression(start_expr)
             end_value = self.evaluate_expression(end_expr)
+            interval_value = self.evaluate_expression(interval_expr)
 
-            # Soporte para iteración ascendente y descendente
+            if interval_value == 0:
+                raise ValueError("Intervalo no puede ser 0.")
+
             if start_value <= end_value:
-                for i in range(start_value, end_value + 1):
+                i = start_value
+                while i <= end_value:
                     self.variables[var_name] = i
                     for stmt in block:
                         self.execute_statement(stmt)
+                    i += interval_value  
             else:
-                for i in range(start_value, end_value - 1, -1):
+                i = start_value
+                while i >= end_value:
                     self.variables[var_name] = i
                     for stmt in block:
                         self.execute_statement(stmt)
+                    i -= interval_value  
 
         elif stmt_type == 'stardock':
             _, condition, block = statement

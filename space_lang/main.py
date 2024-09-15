@@ -33,7 +33,12 @@ def main():
     Stellar myVector = [1, 2, 3, 4, 5].
     star "Impresión del vector" myVector.
 
-    orbit j 0 4.
+    
+      orbit j 0 4.
+        star "Elemento del vector" myVector[j].
+    endOrbit.
+
+    orbit j 4 0.
         star "Elemento del vector" myVector[j].
     endOrbit.
 

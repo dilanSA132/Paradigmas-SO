@@ -35,10 +35,17 @@ class Interpretar:
             start_value = self.evaluate_expression(start_expr)
             end_value = self.evaluate_expression(end_expr)
 
-            for i in range(start_value, end_value + 1):
-                self.variables[var_name] = i
-                for stmt in block:
-                    self.execute_statement(stmt)
+            # Soporte para iteración ascendente y descendente
+            if start_value <= end_value:
+                for i in range(start_value, end_value + 1):
+                    self.variables[var_name] = i
+                    for stmt in block:
+                        self.execute_statement(stmt)
+            else:
+                for i in range(start_value, end_value - 1, -1):
+                    self.variables[var_name] = i
+                    for stmt in block:
+                        self.execute_statement(stmt)
 
         elif stmt_type == 'stardock':
             _, condition, block = statement
@@ -48,7 +55,6 @@ class Interpretar:
                 for stmt in block:
                     self.execute_statement(stmt)
 
-    
     def evaluate_expression(self, expr):
         if isinstance(expr, tuple):
             expr_type = expr[0]

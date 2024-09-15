@@ -41,10 +41,7 @@ class Parser:
         elif token[0] == 'STARDOCK':
             self.pos += 1
             condition = self.parse_condition() 
-            print("LOL "+ condition[0])
-            #self.pos += 1 
             block = self.parse_block('END_STARDOCK')
-            print("HOLAAA "+self.tokens[self.pos][0])
             if self.tokens[self.pos][0] == 'END': 
                 self.pos += 1
             return ('stardock', condition, block)
@@ -64,7 +61,6 @@ class Parser:
             end_expr = self.parse_expression()
             self.pos += 1  
             block = self.parse_block('END_ORBIT') 
-            print(block) 
             return ('orbit', var_name, start_expr, end_expr, block)
 
         else:
@@ -142,4 +138,3 @@ class Parser:
                 self.pos += 1  
         self.pos += 1  
         return elements
- # type: ignore

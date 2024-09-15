@@ -21,14 +21,21 @@ class Interpretar:
             self.variables[var_name] = value_list
 
         elif stmt_type == 'print':
-            _, message, expr = statement
-            value = self.evaluate_expression(expr)
-            if isinstance(value, list):
-                print(f"{message}: {', '.join(map(str, value))}")
-            elif value is None:
-                print(f"{message}: None")
-            else:
-                print(f"{message}: {value}")
+            if len(statement) == 3:  # If both message and expression exist
+                _, message, expr = statement
+                value = self.evaluate_expression(expr)
+                if isinstance(value, list):
+                    print(f"{message}: {', '.join(map(str, value))}")
+                elif value is None:
+                    print(f"{message}: None")
+                else:
+                    print(f"{message}: {value}")
+            else:  # Just print the message
+                _, message = statement
+                if message == '\\n':
+                    print()  # Print a newline
+                else:
+                    print(message)  # Print the message
 
         elif stmt_type == 'orbit':
             _, var_name, start_expr, end_expr, interval_expr, block = statement

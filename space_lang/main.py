@@ -33,28 +33,20 @@ def main():
     Stellar myVector = [1, 2, 3, 4, 5,6].
     star "Impresión del vector" myVector.
 
-    
-      orbit j 0 4 2.
+
+    orbit j 0 5 2.
         star "Elemento del vector" myVector[j].
     endOrbit.
 
-    orbit j 4 0 2.
+    star "------------------------------------".
+
+    orbit j 5 0 2.
         star "Elemento del vector" myVector[j].
     endOrbit.
 
     star "Valor booleano falso" varBoolFalse.
     """
-    source_code1 = """
-    planet mars varBoolTrue = true.
-    planet mars varBoolFalse = false.
-    planet earth var1 = 5.
-    planet earth var2 = 5.
-    planet mars varBool = false.
-    planet earth resultIntSum = var1 + var2. 
-    stardock varBoolTrue != varBoolFalse and var1 <= var2 or varBool. 
-        star "Resultado de suma de enteros" resultIntSum.
-    endStardock.
-    """
+    
     lexer = Lexer(source_code)
     tokens = lexer.tokenize()
     print("=== Tokens ===")

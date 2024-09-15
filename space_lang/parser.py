@@ -47,11 +47,16 @@ class Parser:
             return ('stardock', condition, block)
 
         elif token[0] == 'ID' and token[1] == 'star':
-            self.pos += 1  
+            self.pos += 1  # Skip 'star'
             message = self.parse_expression()
-            expr = self.parse_expression()
-            self.pos += 1  
-            return ('print', message, expr)
+
+            if self.tokens[self.pos][0] != 'END':  # Check if there's an expression after the message
+                expr = self.parse_expression()
+                self.pos += 1  
+                return ('print', message, expr)
+            else:
+                self.pos += 1  # Just print the message
+                return ('print', message)
 
         elif token[0] == 'ORBIT':
             self.pos += 1  

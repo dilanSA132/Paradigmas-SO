@@ -92,6 +92,12 @@ class Interpretar:
 
             elif expr_type == 'greater':
                 return self.evaluate_expression(expr[1]) > self.evaluate_expression(expr[2])
+            
+            elif expr_type == 'greatereq':
+                return self.evaluate_expression(expr[1]) >= self.evaluate_expression(expr[2])
+            
+            elif expr_type == 'lesseq':
+                return self.evaluate_expression(expr[1]) <= self.evaluate_expression(expr[2])
 
             elif expr_type == 'equals':
                 return self.evaluate_expression(expr[1]) == self.evaluate_expression(expr[2])

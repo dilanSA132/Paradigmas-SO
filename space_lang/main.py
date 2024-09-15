@@ -41,11 +41,12 @@ def main():
     """
     source_code1 = """
     planet mars varBoolTrue = true.
-    planet mars varBoolFalse = true.
+    planet mars varBoolFalse = false.
     planet earth var1 = 5.
     planet earth var2 = 5.
+    planet mars varBool = false.
     planet earth resultIntSum = var1 + var2. 
-    stardock varBoolTrue != varBoolFalse. 
+    stardock varBoolTrue != varBoolFalse and var1 <= var2 or varBool. 
         star "Resultado de suma de enteros" resultIntSum.
     endStardock.
     """

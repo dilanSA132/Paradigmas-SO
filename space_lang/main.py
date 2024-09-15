@@ -40,10 +40,12 @@ def main():
     star "Valor booleano falso" varBoolFalse.
     """
     source_code1 = """
+    planet mars varBoolTrue = true.
+    planet mars varBoolFalse = true.
     planet earth var1 = 5.
     planet earth var2 = 5.
     planet earth resultIntSum = var1 + var2. 
-    stardock var1 == var2. 
+    stardock varBoolTrue != varBoolFalse. 
         star "Resultado de suma de enteros" resultIntSum.
     endStardock.
     """

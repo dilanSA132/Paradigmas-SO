@@ -98,6 +98,12 @@ class Interpretar:
 
             elif expr_type == 'notequal':
                 return self.evaluate_expression(expr[1]) != self.evaluate_expression(expr[2])
+            
+            elif expr_type == 'and':
+                return self.evaluate_expression(expr[1]) and self.evaluate_expression(expr[2])
+            
+            elif expr_type == 'or':
+                return self.evaluate_expression(expr[1]) or self.evaluate_expression(expr[2])
 
         elif isinstance(expr, (int, float, str)):
             return expr

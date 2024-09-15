@@ -6,6 +6,7 @@ class Lexer:
         self.tokens = []
         self.token_specification = [
             ('COMMENT', r'#.*'),
+            ('AND', r'and'),
             ('PLANET', r'planet'),
             ('MERCURY', r'mercury'),
             ('VENUS', r'venus'),
@@ -19,11 +20,13 @@ class Lexer:
             ('END_STARDOCK', r'endStardock'),  
             ('STARPATH', r'starpath'), 
             ('SUPERNOVA',r'supernova'), 
+            ('OR', r'or'),
             ('GREATER', r'>'),             
             ('LESS', r'<'),                
             ('GREATEREQ', r'>='),         
             ('LESSEQ', r'<='),
-            ('EQUALS',r'=='),   
+            ('EQUALS',r'=='),
+            ('NOTEQUAL',r'!='),   
             ('STRING', r'"[^"]*"'),
             ('ID', r'[A-Za-z_]\w*'),
             ('NUMBER', r'\d+\.\d+|\d+'),

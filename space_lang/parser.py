@@ -84,7 +84,7 @@ class Parser:
 
     def parse_condition(self):
         left = self.parse_expression()
-        while self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('LESS', 'GREATER', 'EQUALS', 'NOTEQUAL'):
+        while self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('LESS', 'GREATER', 'EQUALS', 'NOTEQUAL','AND','OR'):
             op = self.tokens[self.pos][0]
             self.pos += 1
             right = self.parse_expression()
@@ -142,3 +142,4 @@ class Parser:
                 self.pos += 1  
         self.pos += 1  
         return elements
+ # type: ignore

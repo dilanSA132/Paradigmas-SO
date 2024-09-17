@@ -44,11 +44,14 @@ def main():
     planet mars varBoolFalse = false.
     planet earth var1 = 5.
     planet earth var2 = 5.
-    planet mars varBool = false.
+    planet mars varBool = true.
     planet earth resultIntSum = var1 + var2. 
     stardock varBoolTrue != varBoolFalse and var1 <= var2 or varBool. 
         star "Resultado de suma de enteros" resultIntSum.
     endStardock.
+    supernova.
+        star "HOLA" varBool.
+    endSupernova.
     """
     lexer = Lexer(source_code1)
     tokens = lexer.tokenize()

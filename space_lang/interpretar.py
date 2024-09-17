@@ -41,11 +41,18 @@ class Interpretar:
                     self.execute_statement(stmt)
 
         elif stmt_type == 'stardock':
-            _, condition, block = statement
-
+            _, condition, true_block, false_block = statement
+            
+            # Evaluar la condición
             condition_value = self.evaluate_expression(condition)
+            
+            # Si la condición es verdadera, ejecuta el bloque 'if'
             if condition_value:
-                for stmt in block:
+                for stmt in true_block:
+                    self.execute_statement(stmt)
+            # Si la condición es falsa, ejecuta el bloque 'else' (si existe)
+            else:
+                for stmt in false_block:
                     self.execute_statement(stmt)
 
     

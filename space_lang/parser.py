@@ -41,14 +41,16 @@ class Parser:
         elif token[0] == 'STARDOCK':
             self.pos += 1
             condition = self.parse_condition() 
-            print("LOL "+ condition[0])
-            #self.pos += 1 
-            block = self.parse_block('END_STARDOCK')
-            print("HOLAAA "+self.tokens[self.pos][0])
-            if self.tokens[self.pos][0] == 'END': 
-                self.pos += 1
-            return ('stardock', condition, block)
+            true_block = self.parse_block('END_STARDOCK')  
+            false_block = [] 
+            self.pos += 1
+            if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'SUPERNOVA':
+                self.pos += 2
+                false_block = self.parse_block('END_SUPERNOVA') 
 
+            return ('stardock', condition, true_block, false_block)
+
+        
         elif token[0] == 'ID' and token[1] == 'star':
             self.pos += 1  
             message = self.parse_expression()
@@ -69,7 +71,7 @@ class Parser:
 
         else:
             raise SyntaxError(f'Unexpected token: {token}')
-
+    
     def parse_block(self, end_token):
         block = []
         while self.pos < len(self.tokens) and self.tokens[self.pos][0] != end_token:

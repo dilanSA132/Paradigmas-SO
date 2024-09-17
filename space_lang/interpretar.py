@@ -21,24 +21,45 @@ class Interpretar:
             self.variables[var_name] = value_list
 
         elif stmt_type == 'print':
-            _, message, expr = statement
-            value = self.evaluate_expression(expr)
-            if isinstance(value, list):
-                print(f"{message}: {', '.join(map(str, value))}")
-            elif value is None:
-                print(f"{message}: None")
-            else:
-                print(f"{message}: {value}")
+            if len(statement) == 3:  # If both message and expression exist
+                _, message, expr = statement
+                value = self.evaluate_expression(expr)
+                if isinstance(value, list):
+                    print(f"{message}: {', '.join(map(str, value))}")
+                elif value is None:
+                    print(f"{message}: None")
+                else:
+                    print(f"{message}: {value}")
+            else:  # Just print the message
+                _, message = statement
+                if message == '\\n':
+                    print()  # Print a newline
+                else:
+                    print(message)  # Print the message
 
         elif stmt_type == 'orbit':
-            _, var_name, start_expr, end_expr, block = statement
+            _, var_name, start_expr, end_expr, interval_expr, block = statement
             start_value = self.evaluate_expression(start_expr)
             end_value = self.evaluate_expression(end_expr)
+            interval_value = self.evaluate_expression(interval_expr)
 
-            for i in range(start_value, end_value + 1):
-                self.variables[var_name] = i
-                for stmt in block:
-                    self.execute_statement(stmt)
+            if interval_value == 0:
+                raise ValueError("Intervalo no puede ser 0.")
+
+            if start_value <= end_value:
+                i = start_value
+                while i <= end_value:
+                    self.variables[var_name] = i
+                    for stmt in block:
+                        self.execute_statement(stmt)
+                    i += interval_value  
+            else:
+                i = start_value
+                while i >= end_value:
+                    self.variables[var_name] = i
+                    for stmt in block:
+                        self.execute_statement(stmt)
+                    i -= interval_value  
 
         elif stmt_type == 'stardock':
             _, condition, true_block, false_block = statement
@@ -55,7 +76,6 @@ class Interpretar:
                 for stmt in false_block:
                     self.execute_statement(stmt)
 
-    
     def evaluate_expression(self, expr):
         if isinstance(expr, tuple):
             expr_type = expr[0]

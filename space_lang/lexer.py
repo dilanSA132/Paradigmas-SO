@@ -23,7 +23,7 @@ class Lexer:
             ('STARPATH', r'starpath'), 
             ('OR', r'or'),
             ('GREATEREQ', r'>='),         
-            ('LESSEQ', r'<='),
+            ('LESSEQ', r'<='),            
             ('GREATER', r'>'),             
             ('LESS', r'<'),                
             ('EQUALS',r'=='),
@@ -38,7 +38,7 @@ class Lexer:
             ('DIVIDE', r'/'),
             ('END', r'\.'),
             ('COMMA', r','),
-            ('LPAREN', r'\['),  # Para vectores
+            ('LPAREN', r'\['),  
             ('RPAREN', r'\]'),
             ('NEWLINE', r'\n'),
             ('SKIP', r'[ \t]+'),   

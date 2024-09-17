@@ -30,10 +30,17 @@ def main():
     star "Valor booleano verdadero" varBoolTrue.
     star "Valor booleano falso" varBoolFalse.
 
-    Stellar myVector = [1, 2, 3, 4, 5].
+    Stellar myVector = [1, 2, 3, 4, 5,6].
     star "Impresión del vector" myVector.
 
-    orbit j 0 4.
+
+    orbit j 0 5 2.
+        star "Elemento del vector" myVector[j].
+    endOrbit.
+
+    star "------------------------------------".
+
+    orbit j 5 0 2.
         star "Elemento del vector" myVector[j].
     endOrbit.
 

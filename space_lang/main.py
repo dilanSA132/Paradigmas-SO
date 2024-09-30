@@ -60,7 +60,7 @@ def main():
         star "HOLA" varBool.
     endSupernova.
     """
-    lexer = Lexer(source_code1)
+    lexer = Lexer(source_code)
     tokens = lexer.tokenize()
     print("=== Tokens ===")
     for token in tokens:

@@ -2,10 +2,12 @@ class Interpretar:
     def __init__(self, ast):
         self.ast = ast
         self.variables = {}
+        self.results = []  # Almacenar los resultados de la ejecución
 
     def evaluate(self):
         for node in self.ast:
-            self.execute_statement(node)
+            self.execute_statement(node)  # Ejecutar cada nodo del AST
+        return self.results  # Retornar todos los resultados al final
 
     def execute_statement(self, statement):
         stmt_type = statement[0]
@@ -14,28 +16,33 @@ class Interpretar:
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
             self.variables[var_name] = value
+            return value
 
         elif stmt_type == 'declare_vector':
             _, var_name, expr_list = statement
             value_list = [self.evaluate_expression(expr) for expr in expr_list]
             self.variables[var_name] = value_list
+            return value_list
 
         elif stmt_type == 'print':
-            if len(statement) == 3:  # If both message and expression exist
+            if len(statement) == 3:
                 _, message, expr = statement
                 value = self.evaluate_expression(expr)
-                if isinstance(value, list):
-                    print(f"{message}: {', '.join(map(str, value))}")
-                elif value is None:
-                    print(f"{message}: None")
+                result_message = f"{message}: {value}"
+                print(result_message)  # Mostrar en consola para depuración
+                self.results.append(result_message)  # Almacenar el resultado
+                return result_message
+            else:
+                # En caso de `star` seguido de una variable o un mensaje directo
+                _, expr = statement
+                value = self.evaluate_expression(expr)
+                if value is None:
+                    result_message = f"Variable '{expr[1]}' no definida"
                 else:
-                    print(f"{message}: {value}")
-            else:  # Just print the message
-                _, message = statement
-                if message == '\\n':
-                    print()  # Print a newline
-                else:
-                    print(message)  # Print the message
+                    result_message = f"{value}"
+                print(result_message)  # Mostrar en consola para depuración
+                self.results.append(result_message)
+                return result_message
 
         elif stmt_type == 'orbit':
             _, var_name, start_expr, end_expr, interval_expr, block = statement
@@ -52,26 +59,22 @@ class Interpretar:
                     self.variables[var_name] = i
                     for stmt in block:
                         self.execute_statement(stmt)
-                    i += interval_value  
+                    i += interval_value
             else:
                 i = start_value
                 while i >= end_value:
                     self.variables[var_name] = i
                     for stmt in block:
                         self.execute_statement(stmt)
-                    i -= interval_value  
+                    i -= interval_value
 
         elif stmt_type == 'stardock':
             _, condition, true_block, false_block = statement
-            
-            # Evaluar la condición
             condition_value = self.evaluate_expression(condition)
             
-            # Si la condición es verdadera, ejecuta el bloque 'if'
             if condition_value:
                 for stmt in true_block:
                     self.execute_statement(stmt)
-            # Si la condición es falsa, ejecuta el bloque 'else' (si existe)
             else:
                 for stmt in false_block:
                     self.execute_statement(stmt)
@@ -95,12 +98,12 @@ class Interpretar:
 
             elif expr_type == 'index_access':
                 vector_name = expr[1]
-                index = self.evaluate_expression(expr[2])  
+                index = self.evaluate_expression(expr[2])
                 vector = self.variables.get(vector_name, None)
                 if isinstance(vector, list) and 0 <= index < len(vector):
                     return vector[index]
                 else:
-                    raise IndexError(f'Index {index} out of bounds for vector {vector_name}')
+                    raise IndexError(f'Índice {index} fuera de los límites para el vector {vector_name}')
 
             elif expr_type == 'plus':
                 return self.evaluate_expression(expr[1]) + self.evaluate_expression(expr[2])

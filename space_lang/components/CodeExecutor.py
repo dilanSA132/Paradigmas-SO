@@ -1,6 +1,6 @@
-from lexer import Lexer
-from parser import Parser
-from interpretar import Interpretar
+from lenguage.lexer import Lexer
+from lenguage.parser import Parser
+from lenguage.interpretar import Interpretar
 
 class CodeExecutor:
     def __init__(self, code_input, tokens_display, ast_display, result_display):

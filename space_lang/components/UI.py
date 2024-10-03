@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, scrolledtext, Menu
+from components.Autocomplete import Autocomplete
 import re
 
 class CodeExecutorUI:
@@ -17,7 +18,9 @@ class CodeExecutorUI:
 
         self.setup_ui()
         self.create_menu()
-        self.create_autocomplete_popup()
+
+        self.autocomplete = Autocomplete(self.root, self.code_input, self.keywords)
+        self.code_input.bind("<KeyRelease>", self.on_key_release)
 
     def setup_ui(self):
         main_frame = tk.Frame(self.root, bg="#1e1e1e")
@@ -46,7 +49,6 @@ class CodeExecutorUI:
         self.code_input.tag_configure("double", foreground="#dcdcaa")   
         self.code_input.tag_configure("string_var", foreground="#ce9178")  
         self.code_input.tag_configure("bool", foreground="#569cd6")    
-        self.code_input.bind("<KeyRelease>", self.on_key_release)
 
         right_panel = tk.Frame(main_frame, bg="#282828", bd=1, relief=tk.SOLID)
         right_panel.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
@@ -105,86 +107,13 @@ class CodeExecutorUI:
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)
         self.root.config(menu=menu_bar)
 
-    def create_autocomplete_popup(self):
-        """Crea la ventana emergente de autocompletado."""
-        self.popup = tk.Toplevel(self.root)
-        self.popup.wm_overrideredirect(True)
-        self.popup.geometry("0x0+0+0")
-        self.listbox = tk.Listbox(self.popup, bg="#FFFFFF", fg="#000000", selectbackground="#ADD8E6", font=("Consolas", 12))
-        self.listbox.pack()
-        self.listbox.bind("<Return>", self.select_autocomplete)  # Selección con Enter
-        self.listbox.bind("<Double-Button-1>", self.select_autocomplete)  # Selección con doble clic
-
     def on_key_release(self, event):
-        """Esta función maneja tanto el resaltado de sintaxis como el autocompletado."""
-        self.highlight_syntax()  
-        if event.keysym in ["Up", "Down"]:
-            self.listbox.focus_set()
-            if event.keysym == "Down":
-                self.listbox.selection_clear(0, tk.END)
-                self.listbox.selection_set(0)
-                self.listbox.activate(0)
-            elif event.keysym == "Up":
-                self.listbox.selection_clear(0, tk.END)
-                self.listbox.selection_set(tk.END)
-                self.listbox.activate(tk.END)
-            return
-
-        word = self.get_current_word()
-        if word:
-            self.show_autocomplete_popup(word)
-        else:
-            self.hide_autocomplete_popup()
-
-    def get_current_word(self):
-        """Obtiene la palabra actual en el cursor."""
-        cursor_pos = self.code_input.index(tk.INSERT)
-        current_line = self.code_input.get(f"{cursor_pos} linestart", cursor_pos)
-        match = re.search(r'\w+$', current_line)
-        return match.group(0) if match else None
-
-    def show_autocomplete_popup(self, word):
-        """Muestra las sugerencias de autocompletado."""
-        matches = [kw for kw in self.keywords if kw.startswith(word)]
-        if matches:
-            self.listbox.delete(0, tk.END)
-            for match in matches:
-                self.listbox.insert(tk.END, match)
-
-            if len(matches) > 0:
-                x, y, _, _ = self.code_input.bbox(tk.INSERT)
-                x += self.code_input.winfo_rootx() + 5
-                y += self.code_input.winfo_rooty() + 25
-
-                width = 200 
-                height = min(150, 20 * len(matches)) 
-
-                self.popup.geometry(f"{width}x{height}+{x}+{y}")
-                self.popup.deiconify()
-            else:
-                self.hide_autocomplete_popup()
-        else:
-            self.hide_autocomplete_popup()
-
-    def hide_autocomplete_popup(self):
-        """Oculta la ventana emergente de autocompletado."""
-        self.popup.withdraw()
-
-    def select_autocomplete(self, event):
-        """Selecciona la palabra del listbox y la inserta en el editor."""
-        if self.listbox.size() == 0:
-            return
-        selected = self.listbox.get(tk.ACTIVE)
-        cursor_pos = self.code_input.index(tk.INSERT)
-        current_line = self.code_input.get(f"{cursor_pos} linestart", cursor_pos)
-
-        new_text = re.sub(r'\w+$', selected, current_line)
-        self.code_input.delete(f"{cursor_pos} linestart", cursor_pos)
-        self.code_input.insert(f"{cursor_pos} linestart", new_text)
-
-        self.hide_autocomplete_popup()
+        """Maneja el autocompletado y el resaltado de sintaxis."""
+        self.autocomplete.on_key_release(event)
+        self.highlight_syntax()
 
     def highlight_syntax(self, event=None):
+        """Función para resaltar la sintaxis en el editor."""
         self.code_input.tag_remove("keyword", "1.0", tk.END)
         self.code_input.tag_remove("number", "1.0", tk.END)
         self.code_input.tag_remove("string", "1.0", tk.END)
@@ -197,9 +126,9 @@ class CodeExecutorUI:
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
         keywords = r"\b(planet|star|orbit|stardock|endStardock|endOrbit|supernova|endSupernova)\b"
-        integers = r"\b\d+\b"  # Números enteros
-        floats = r"\b\d+\.\d+\b"  # Números flotantes
-        booleans = r"\b(true|false)\b"  # Booleanos
+        integers = r"\b\d+\b"  
+        floats = r"\b\d+\.\d+\b"  
+        booleans = r"\b(true|false)\b" 
         strings = r'"[^"]*"'
         comments = r'#.*'
         planets = r"\b(earth|mars|mercury|venus|jupiter)\b"  
@@ -224,4 +153,3 @@ class CodeExecutorUI:
 
         for match in re.finditer(planets, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("planet", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
-

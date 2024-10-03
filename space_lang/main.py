@@ -1,7 +1,7 @@
 import tkinter as tk
-from structs import Structs
-from CodeExecutorUI import CodeExecutorUI
-from CodeExecutor import CodeExecutor
+from components.structs import Structs
+from components.UI import CodeExecutorUI
+from components.CodeExecutor import CodeExecutor
 
 def main():
     root = tk.Tk()

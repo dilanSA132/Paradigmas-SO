@@ -24,18 +24,18 @@ class Parser:
             self.pos += 1
             var_name = self.tokens[self.pos][1]
             self.pos += 1
-            self.pos += 1  
+            self.pos += 1  # Saltar 'LPAREN'
             expr = self.parse_expression()
-            self.pos += 1  
+            self.pos += 1  # Saltar 'RPAREN'
             return ('declare', var_type, var_name, expr)
 
         elif token[0] == 'STELLAR':
             self.pos += 1
             var_name = self.tokens[self.pos][1]
             self.pos += 1  
-            self.pos += 1  
+            self.pos += 1  # Saltar 'LPAREN'
             expr_list = self.parse_list()
-            self.pos += 1  
+            self.pos += 1  # Saltar 'RPAREN'
             return ('declare_vector', var_name, expr_list)
         
         elif token[0] == 'STARDOCK':
@@ -43,24 +43,23 @@ class Parser:
             condition = self.parse_condition() 
             true_block = self.parse_block('END_STARDOCK')  
             false_block = [] 
-            self.pos += 1
+
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'SUPERNOVA':
-                self.pos += 2
+                self.pos += 2  # Saltar 'SUPERNOVA' y su espacio
                 false_block = self.parse_block('END_SUPERNOVA') 
 
             return ('stardock', condition, true_block, false_block)
 
-        
         elif token[0] == 'ID' and token[1] == 'star':
-            self.pos += 1  # Skip 'star'
+            self.pos += 1  # Saltar 'star'
             message = self.parse_expression()
 
-            if self.tokens[self.pos][0] != 'END':  # Check if there's an expression after the message
+            if self.tokens[self.pos][0] != 'END':
                 expr = self.parse_expression()
                 self.pos += 1  
                 return ('print', message, expr)
             else:
-                self.pos += 1  # Just print the message
+                self.pos += 1  # Solo imprimir el mensaje
                 return ('print', message)
 
         elif token[0] == 'ORBIT':
@@ -69,13 +68,13 @@ class Parser:
             self.pos += 1  
             start_expr = self.parse_expression()
             end_expr = self.parse_expression()
-            interval_expr = self.parse_expression()  # Capturamos el intervalo
+            interval_expr = self.parse_expression()  # Captura el intervalo
             self.pos += 1  
             block = self.parse_block('END_ORBIT') 
-            return ('orbit', var_name, start_expr, end_expr, interval_expr, block)  # Devolvemos el intervalo
+            return ('orbit', var_name, start_expr, end_expr, interval_expr, block)
 
         else:
-            raise SyntaxError(f'Unexpected token: {token}')
+            raise SyntaxError(f'Unexpected token: {token} at position {self.pos}')
     
     def parse_block(self, end_token):
         block = []
@@ -83,22 +82,22 @@ class Parser:
             statement = self.parse_statement()
             if statement:
                 block.append(statement)
-        if self.tokens[self.pos][0] == end_token:
+        if self.pos < len(self.tokens) and self.tokens[self.pos][0] == end_token:
             self.pos += 1  
         else:
-            raise SyntaxError(f"Expected {end_token}, but got {self.tokens[self.pos]}")
+            raise SyntaxError(f"Expected {end_token}, but got {self.tokens[self.pos]} at position {self.pos}")
         return block
 
     def parse_condition(self):
         left = self.parse_expression()
-        while self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('LESS', 'GREATER', 'EQUALS', 'NOTEQUAL','AND','OR','LESSEQ','GREATEREQ'):
+        while (self.pos < len(self.tokens) and 
+               self.tokens[self.pos][0] in ('LESS', 'GREATER', 'EQUALS', 'NOTEQUAL', 'AND', 'OR', 'LESSEQ', 'GREATEREQ')):
             op = self.tokens[self.pos][0]
             self.pos += 1
             right = self.parse_expression()
             left = (op.lower(), left, right)
-        if self.tokens[self.pos][0] == 'END':
+        if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'END':
             self.pos += 1  
-        
         return left
     
     def parse_expression(self):
@@ -130,22 +129,22 @@ class Parser:
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'LPAREN': 
                 self.pos += 1  
                 index_expr = self.parse_expression()  
-                self.pos += 1  
+                self.pos += 1  # Saltar 'RPAREN'
                 return ('index_access', token[1], index_expr)
             return ('var', token[1])
         elif token[0] == 'LPAREN':
             expr = self.parse_expression()
-            self.pos += 1  
+            self.pos += 1  # Saltar 'RPAREN'
             return expr
         else:
-            raise SyntaxError(f'Invalid expression: {token}')
+            raise SyntaxError(f'Invalid expression: {token} at position {self.pos}')
 
     def parse_list(self):
         elements = []
-        self.pos += 1  
-        while self.tokens[self.pos][0] != 'RPAREN':  
+        self.pos += 1  # Saltar 'LPAREN'
+        while self.tokens[self.pos][0] != 'RPAREN':
             elements.append(self.parse_expression())
             if self.tokens[self.pos][0] == 'COMMA':
-                self.pos += 1  
-        self.pos += 1  
+                self.pos += 1  # Saltar 'COMMA'
+        self.pos += 1  # Saltar 'RPAREN'
         return elements

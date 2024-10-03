@@ -2,13 +2,13 @@ class Interpretar:
     def __init__(self, ast):
         self.ast = ast
         self.variables = {}
-        self.results = []  # Almacena los resultados de la ejecución
-        self.debug_mode = True  # Habilitar mensajes de depuración
+        self.results = [] 
+        self.debug_mode = True  
 
     def evaluate(self):
         for node in self.ast:
-            self.execute_statement(node)  # Ejecutar cada nodo del AST
-        return self.results  # Retornar todos los resultados al final
+            self.execute_statement(node) 
+        return self.results  
 
     def execute_statement(self, statement):
         stmt_type = statement[0]
@@ -16,7 +16,7 @@ class Interpretar:
         if stmt_type == 'declare':
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
-            self.check_type(value, var_type)  # Verificar tipo antes de asignar
+            self.check_type(value, var_type)  
             self.variables[var_name] = value
             return value
 
@@ -117,7 +117,6 @@ class Interpretar:
             else:
                 raise IndexError(f'Index {index} out of bounds for vector {vector_name}')
 
-        # Operadores aritméticos y lógicos
         left = self.evaluate_expression(expr[1])
         right = self.evaluate_expression(expr[2])
         
@@ -152,4 +151,4 @@ class Interpretar:
 
     def debug_print(self, message):
         if self.debug_mode:
-            print(f"DEBUG: {message}")  # Imprimir mensajes de depuración solo si están habilitados
+            print(f"DEBUG: {message}")  

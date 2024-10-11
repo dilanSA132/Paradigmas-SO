@@ -13,8 +13,9 @@ class CodeExecutorUI:
         self.structs = structs
         self.execute_callback = execute_callback
 
-        self.keywords = ["planet", "star", "orbit", "stardock", "endStardock", "endOrbit", "supernova", 
-                         "endSupernova", "earth", "mars", "mercury", "venus", "jupiter", "true", "false"]
+        self.keywords = ["planet", "star", "starcatch", "orbit", "stardock", "endStardock", 
+                         "endOrbit", "supernova", "endSupernova", "earth", "mars", 
+                         "mercury", "venus", "jupiter", "true", "false"]
 
         self.setup_ui()
         self.create_menu()
@@ -103,6 +104,7 @@ class CodeExecutorUI:
         insert_menu.add_command(label="Bucle", command=self.structs.insert_loop_structure)
         insert_menu.add_command(label="Declaración de vector", command=self.structs.insert_vector_declaration)
         insert_menu.add_command(label="Impresión de vector", command=self.structs.insert_vector_print)
+        insert_menu.add_command(label="Selector de Variable", command=self.structs.insert_Input_print)
 
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)
         self.root.config(menu=menu_bar)
@@ -125,7 +127,7 @@ class CodeExecutorUI:
         self.code_input.tag_remove("string_var", "1.0", tk.END)
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
-        keywords = r"\b(planet|star|orbit|stardock|endStardock|endOrbit|supernova|endSupernova)\b"
+        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova)\b"
         integers = r"\b\d+\b"  
         floats = r"\b\d+\.\d+\b"  
         booleans = r"\b(true|false)\b" 

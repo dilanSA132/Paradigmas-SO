@@ -64,3 +64,7 @@ class Structs:
     def insert_vector_print(self):
         code = "star \"Impresión del vector\" myVector.\n"
         self.code_input.insert(tk.INSERT, code)
+
+    def insert_Input_print(self):
+        code = "starcatch \" mynum.\n"
+        self.code_input.insert(tk.INSERT, code)

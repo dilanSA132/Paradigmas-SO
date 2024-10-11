@@ -1,14 +1,15 @@
 class Interpretar:
-    def __init__(self, ast):
+    def __init__(self, ast, input_callback):
         self.ast = ast
         self.variables = {}
-        self.results = [] 
-        self.debug_mode = True  
+        self.results = []
+        self.debug_mode = True
+        self.input_callback = input_callback
 
     def evaluate(self):
         for node in self.ast:
-            self.execute_statement(node) 
-        return self.results  
+            self.execute_statement(node)
+        return self.results
 
     def execute_statement(self, statement):
         stmt_type = statement[0]
@@ -16,7 +17,7 @@ class Interpretar:
         if stmt_type == 'declare':
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
-            self.check_type(value, var_type)  
+            self.check_type(value, var_type)
             self.variables[var_name] = value
             return value
 
@@ -29,23 +30,59 @@ class Interpretar:
         elif stmt_type == 'print':
             self.handle_print(statement)
 
+        elif stmt_type == 'starcatch':
+            _, var_name = statement
+            var_type = self.get_variable_type(var_name)
+            value = self.input_callback(f"Enter a value for {var_name}: ")
+            value = self.convert_value(value, var_type)
+            self.variables[var_name] = value
+            self.debug_print(f"Captured input for {var_name} ({var_type}): {value}")
+            self.results.append(f"Input captured for {var_name}: {value}")
+
         elif stmt_type == 'orbit':
             self.handle_orbit(statement)
 
         elif stmt_type == 'stardock':
             self.handle_stardock(statement)
 
+    def get_variable_type(self, var_name):
+        """Determina el tipo de la variable basada en el prefijo del tipo (earth, mercury, venus, etc.)."""
+        for var_type in ['earth', 'mercury', 'jupiter', 'venus', 'mars']:
+            if f"{var_type} {var_name}" in self.variables:
+                return var_type
+        return None
+
+    def convert_value(self, value, var_type):
+        """Convierte el valor de entrada según el tipo de la variable."""
+        try:
+            if var_type == 'earth':  # Se espera un entero
+                return int(value)
+            elif var_type == 'mercury' or var_type == 'jupiter':  # Se espera un flotante
+                return float(value)
+            elif var_type == 'venus':  # Se espera una cadena
+                return str(value)
+            elif var_type == 'mars':  # Se espera un booleano
+                return value.lower() == 'true'
+        except ValueError:
+            raise TypeError(f"Cannot convert value '{value}' to {var_type}.")
+        return value
+
     def check_type(self, value, expected_type):
-        if expected_type == 'int' and not isinstance(value, (int, float)):
+        if expected_type == 'earth' and not isinstance(value, int):
             raise TypeError(f"Expected an integer, but got {type(value).__name__}.")
-        elif expected_type == 'string' and not isinstance(value, str):
+        elif expected_type in ['mercury', 'jupiter'] and not isinstance(value, float):
+            raise TypeError(f"Expected a float, but got {type(value).__name__}.")
+        elif expected_type == 'venus' and not isinstance(value, str):
             raise TypeError(f"Expected a string, but got {type(value).__name__}.")
+        elif expected_type == 'mars' and not isinstance(value, bool):
+            raise TypeError(f"Expected a boolean, but got {type(value).__name__}.")
 
     def handle_print(self, statement):
         if len(statement) == 3:
             _, message, expr = statement
+            message_text = message[1] if message[0] == 'string' else str(self.evaluate_expression(message))
             value = self.evaluate_expression(expr)
-            result_message = f"{message}: {value}"
+            result_message = f"{message_text}: {value}"
         else:
             _, expr = statement
             value = self.evaluate_expression(expr)
@@ -63,7 +100,6 @@ class Interpretar:
         if interval_value == 0:
             raise ValueError("Interval cannot be 0.")
 
-        # Iteración en función del valor de inicio y fin
         i = start_value
         if start_value <= end_value:
             while i <= end_value:
@@ -151,4 +187,4 @@ class Interpretar:
 
     def debug_print(self, message):
         if self.debug_mode:
-            print(f"DEBUG: {message}")  
+            print(f"DEBUG: {message}")

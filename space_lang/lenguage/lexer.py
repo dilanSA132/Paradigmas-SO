@@ -40,6 +40,7 @@ class Lexer:
             ('COMMA', r','),
             ('LPAREN', r'\['),  
             ('RPAREN', r'\]'),
+            ('COLON', r':'),
             ('NEWLINE', r'\n'),
             ('SKIP', r'[ \t]+'),   
             ('LCURLYBRACK', r'\{'),          

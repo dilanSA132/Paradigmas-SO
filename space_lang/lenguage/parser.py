@@ -24,58 +24,71 @@ class Parser:
             self.pos += 1
             var_name = self.tokens[self.pos][1]
             self.pos += 1
-            self.pos += 1  # Saltar 'LPAREN'
+            self.pos += 1  # Saltar 'ASSIGN'
             expr = self.parse_expression()
-            self.pos += 1  # Saltar 'RPAREN'
+            self.pos += 1  # Saltar 'END'
             return ('declare', var_type, var_name, expr)
 
         elif token[0] == 'STELLAR':
             self.pos += 1
             var_name = self.tokens[self.pos][1]
-            self.pos += 1  
-            self.pos += 1  # Saltar 'LPAREN'
+            self.pos += 1
+            self.pos += 1  # Saltar 'ASSIGN'
             expr_list = self.parse_list()
-            self.pos += 1  # Saltar 'RPAREN'
+            self.pos += 1  # Saltar 'END'
             return ('declare_vector', var_name, expr_list)
-        
+
         elif token[0] == 'STARDOCK':
             self.pos += 1
-            condition = self.parse_condition() 
-            true_block = self.parse_block('END_STARDOCK')  
-            false_block = [] 
+            condition = self.parse_condition()
+            self.pos += 1  # Saltar 'END' que sigue a la condición
+            true_block = self.parse_block('END_STARDOCK')
+            false_block = []
 
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'SUPERNOVA':
-                self.pos += 2  # Saltar 'SUPERNOVA' y su espacio
-                false_block = self.parse_block('END_SUPERNOVA') 
+                self.pos += 1  # Saltar 'SUPERNOVA'
+                self.pos += 1  # Saltar 'END'
+                false_block = self.parse_block('END_SUPERNOVA')
 
             return ('stardock', condition, true_block, false_block)
 
         elif token[0] == 'ID' and token[1] == 'star':
             self.pos += 1  # Saltar 'star'
             message = self.parse_expression()
-
+            if self.tokens[self.pos][0] == 'COLON':
+                self.pos += 1  # Saltar 'COLON'
             if self.tokens[self.pos][0] != 'END':
                 expr = self.parse_expression()
-                self.pos += 1  
+                self.pos += 1  # Saltar 'END'
                 return ('print', message, expr)
             else:
                 self.pos += 1  # Solo imprimir el mensaje
                 return ('print', message)
 
-        elif token[0] == 'ORBIT':
-            self.pos += 1  
+        elif token[0] == 'ID' and token[1] == 'starcatch':
+            self.pos += 1  # Saltar 'starcatch'
             var_name = self.tokens[self.pos][1]
-            self.pos += 1  
+            self.pos += 1  # Saltar la variable
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1  # Saltar 'END'
+                return ('starcatch', var_name)
+            else:
+                raise SyntaxError(f"Expected end of statement but got {self.tokens[self.pos]}")
+
+        elif token[0] == 'ORBIT':
+            self.pos += 1
+            var_name = self.tokens[self.pos][1]
+            self.pos += 1
             start_expr = self.parse_expression()
             end_expr = self.parse_expression()
-            interval_expr = self.parse_expression()  # Captura el intervalo
-            self.pos += 1  
-            block = self.parse_block('END_ORBIT') 
+            interval_expr = self.parse_expression()
+            self.pos += 1  # Saltar 'END'
+            block = self.parse_block('END_ORBIT')
             return ('orbit', var_name, start_expr, end_expr, interval_expr, block)
 
         else:
             raise SyntaxError(f'Unexpected token: {token} at position {self.pos}')
-    
+
     def parse_block(self, end_token):
         block = []
         while self.pos < len(self.tokens) and self.tokens[self.pos][0] != end_token:
@@ -83,7 +96,7 @@ class Parser:
             if statement:
                 block.append(statement)
         if self.pos < len(self.tokens) and self.tokens[self.pos][0] == end_token:
-            self.pos += 1  
+            self.pos += 1  # Saltar el 'end' correspondiente (END_STARDOCK o END_SUPERNOVA)
         else:
             raise SyntaxError(f"Expected {end_token}, but got {self.tokens[self.pos]} at position {self.pos}")
         return block
@@ -96,10 +109,8 @@ class Parser:
             self.pos += 1
             right = self.parse_expression()
             left = (op.lower(), left, right)
-        if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'END':
-            self.pos += 1  
         return left
-    
+
     def parse_expression(self):
         left = self.parse_term()
         while self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('PLUS', 'MINUS'):
@@ -126,9 +137,9 @@ class Parser:
         elif token[0] == 'STRING':
             return ('string', token[1])
         elif token[0] == 'ID':
-            if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'LPAREN': 
-                self.pos += 1  
-                index_expr = self.parse_expression()  
+            if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'LPAREN':
+                self.pos += 1  # Saltar 'LPAREN'
+                index_expr = self.parse_expression()
                 self.pos += 1  # Saltar 'RPAREN'
                 return ('index_access', token[1], index_expr)
             return ('var', token[1])
@@ -141,7 +152,8 @@ class Parser:
 
     def parse_list(self):
         elements = []
-        self.pos += 1  # Saltar 'LPAREN'
+        if self.tokens[self.pos][0] == 'LPAREN':
+            self.pos += 1  # Saltar 'LPAREN'
         while self.tokens[self.pos][0] != 'RPAREN':
             elements.append(self.parse_expression())
             if self.tokens[self.pos][0] == 'COMMA':

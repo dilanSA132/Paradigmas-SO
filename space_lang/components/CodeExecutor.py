@@ -1,3 +1,4 @@
+import tkinter as tk
 from lenguage.lexer import Lexer
 from lenguage.parser import Parser
 from lenguage.interpretar import Interpretar
@@ -21,12 +22,42 @@ class CodeExecutor:
             ast = parser.parse()
             self.show_ast(ast)
 
-            interpreter = Interpretar(ast)
+            # Pasar la función de entrada al intérprete
+            interpreter = Interpretar(ast, self.get_input_from_user)
             results = interpreter.evaluate()
             self.show_results(results)
 
         except Exception as e:
             self.display_error(f"Error: {str(e)}")
+
+    def get_input_from_user(self, prompt):
+        """Muestra un cuadro de diálogo personalizado para capturar la entrada del usuario."""
+        dialog = tk.Toplevel(self.code_input)
+        dialog.title("Input")
+        dialog.configure(bg="#1e1e1e")  # Fondo negro
+        dialog.geometry("400x150")
+        dialog.grab_set()  # Hacer que el diálogo sea modal
+
+        label = tk.Label(dialog, text=prompt, bg="#1e1e1e", fg="#dcdcdc", font=("Consolas", 12))
+        label.pack(pady=10)
+
+        entry = tk.Entry(dialog, bg="#2d2d30", fg="#dcdcdc", insertbackground="white", font=("Consolas", 12))
+        entry.pack(pady=10)
+        entry.focus_set()
+
+        result = {"value": None}
+
+        def on_submit():
+            result["value"] = entry.get()
+            dialog.destroy()
+
+        submit_button = tk.Button(dialog, text="Aceptar", command=on_submit, bg="#333333", fg="#FFD700", font=("Helvetica", 12))
+        submit_button.pack(pady=10)
+
+        dialog.bind("<Return>", lambda event: on_submit())
+        dialog.wait_window()  # Esperar a que el cuadro de diálogo se cierre
+
+        return result["value"]
 
     def show_tokens(self, tokens):
         self.tokens_display.config(state="normal")

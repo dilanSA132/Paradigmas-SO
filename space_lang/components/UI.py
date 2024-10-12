@@ -13,9 +13,13 @@ class CodeExecutorUI:
         self.structs = structs
         self.execute_callback = execute_callback
 
-        self.keywords = ["planet", "star", "starcatch", "orbit", "stardock", "endStardock", 
-                         "perseids","endPerseids","meteor","endMeteor","commet","endCommet","endOrbit",  
-                         "supernova", "endSupernova", "earth", "mars","mercury", "venus", "jupiter", "true", "false"]
+        self.keywords = [
+            "planet", "star", "starcatch", "orbit", "stardock", "endStardock", 
+            "perseids","endPerseids","meteor","endMeteor","commet","endCommet",
+            "endOrbit", "supernova", "endSupernova", "earth", "mars", "mercury", 
+            "venus", "jupiter", "true", "false", "andromeda", "stardust", "Stellar",
+            "endAndromeda", "suma", "stardock", "endStardock", "stardust", "stardock"
+        ]
 
         self.setup_ui()
         self.create_menu()
@@ -132,31 +136,38 @@ class CodeExecutorUI:
         self.code_input.tag_remove("string_var", "1.0", tk.END)
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
-        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet)\b"
-        integers = r"\b\d+\b"  
-        floats = r"\b\d+\.\d+\b"  
-        booleans = r"\b((?i:true)|(?i:false))\b" 
-        strings = r'"[^"]*"'
-        comments = r'#.*'
-        planets = r"\b(earth|mars|mercury|venus|jupiter)\b"  
+        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar)\b"
+        integers = r"\b\d+\b"  # Resalta números enteros
+        floats = r"\b\d+\.\d+\b"  # Resalta números flotantes
+        booleans = r"\b((?i:true)|(?i:false))\b"  # Resalta valores booleanos true/false insensibles a mayúsculas
+        strings = r'"[^"]*"'  # Resalta cadenas de texto
+        comments = r'#.*'  # Resalta comentarios
+        planets = r"\b(earth|mars|mercury|venus|jupiter)\b"  # Resalta tipos de planetas
 
+        # Resaltar palabras clave
         for match in re.finditer(keywords, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("keyword", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
+        # Resaltar números enteros
         for match in re.finditer(integers, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("int", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
+        # Resaltar números flotantes
         for match in re.finditer(floats, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("float", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
+        # Resaltar booleanos
         for match in re.finditer(booleans, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("bool", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
+        # Resaltar cadenas de texto
         for match in re.finditer(strings, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("string_var", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
+        # Resaltar comentarios
         for match in re.finditer(comments, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("comment", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
+        # Resaltar tipos de planetas (earth, mars, etc.)
         for match in re.finditer(planets, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("planet", f"1.0+{match.start()}c", f"1.0+{match.end()}c")

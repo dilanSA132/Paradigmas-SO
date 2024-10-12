@@ -6,7 +6,7 @@ class Structs:
         self.code_input = code_input
 
     def insert_loop_structure(self):
-        loop_code = "orbit i 0 10 1.\n    star \"Elemento del bucle\" i.\nendOrbit.\n"
+        loop_code = "orbit j 0 5 2.\n    star \"Elemento del vector\" myVector[j].\nendOrbit.\n"
         self.code_input.insert(tk.INSERT, loop_code)
 
     def insert_conditional_structure(self):
@@ -37,10 +37,6 @@ class Structs:
         code = "planet mars varBoolTrue = true.\nplanet mars varBoolFalse = false.\n"
         self.code_input.insert(tk.INSERT, code)
 
-    def insert_conditional_structure(self):
-        conditional_code = "stardock var1 < var2.\n    star planet earth myVar = 10.\nendStardock.\n"
-        self.code_input.insert(tk.INSERT, conditional_code)
-
     def insert_int_sum(self):
         code = "planet earth resultIntSum = var1 + var2.\n"
         self.code_input.insert(tk.INSERT, code)
@@ -53,10 +49,6 @@ class Structs:
         code = "planet jupiter resultDoubleMul = varDouble1 * varDouble2.\n"
         self.code_input.insert(tk.INSERT, code)
 
-    def insert_loop_structure(self):
-        loop_code = "orbit j 0 5 2.\n    star \"Elemento del vector\" myVector[j].\nendOrbit.\n"
-        self.code_input.insert(tk.INSERT, loop_code)
-
     def insert_vector_declaration(self):
         code = "Stellar myVector = [1, 2, 3, 4, 5, 6].\n"
         self.code_input.insert(tk.INSERT, code)
@@ -66,9 +58,9 @@ class Structs:
         self.code_input.insert(tk.INSERT, code)
 
     def insert_Input_print(self):
-        code = "starcatch \" mynum.\n"
+        code = "starcatch mynum.\n"
         self.code_input.insert(tk.INSERT, code)
 
     def insert_switch_structure(self):
-        code = "perseids var1.\n  meteor 1.\n\tstar \"valor X: \" var1.\n  endMeteor.\n  meteor 2.\n\t star \"valor Y: \" var1.\n  endMeteor.\n  commet.\n\tstar \"valor\" var1.\n  endCommet.\nendPerseids.\n"
+        code = "perseids var1.\n  meteor 1.\n    star \"valor X: \" var1.\n  endMeteor.\n  meteor 2.\n    star \"valor Y: \" var1.\n  endMeteor.\n  commet.\n    star \"valor\" var1.\n  endCommet.\nendPerseids.\n"
         self.code_input.insert(tk.INSERT, code)

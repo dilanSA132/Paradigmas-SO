@@ -19,7 +19,7 @@ class Interpretar:
         if stmt_type == 'declare':
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
-            self.check_type(value, var_type)
+            self.check_type_variable(value, var_type)
             self.variables[var_name] = value
             return value
 
@@ -68,8 +68,11 @@ class Interpretar:
             return_value = self.evaluate_expression(statement[1])
             self.debug_print(f"Returning value {return_value}")
             return return_value  
-
+        
     def call_function(self, function_name, args):
+        if function_name in self.variables:  # Si es un vector o una variable, no debe ser tratado como función
+            raise TypeError(f"'{function_name}' is not a function, but a variable.")
+
         if function_name not in self.functions:
             raise NameError(f"Function {function_name} is not defined.")
 
@@ -93,7 +96,7 @@ class Interpretar:
         self.variables = previous_vars  
         if return_value is None:
             raise ValueError(f"Function {function_name} did not return a value.")
-    
+        
         self.check_type(return_value, function_info['return_type'])
         return return_value
 
@@ -119,6 +122,30 @@ class Interpretar:
             raise TypeError(f"Cannot convert value '{value}' to {var_type}.")
         return value
 
+    def check_type_variable(self, value, expected_type):
+    # Diccionario que mapea los tipos a sus correspondientes tipos de Python
+        type_map = {
+            'EARTH': int,
+            'MERCURY': float,
+            'JUPITER': float,
+            'VENUS': str,
+
+        }
+        if expected_type in type_map:
+            if not isinstance(value, type_map[expected_type]):
+                raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
+            
+        elif expected_type == 'MARS':
+            if value is None:
+                raise TypeError("Expected a boolean, but got None.")
+
+            elif isinstance(value, str) and value.lower() in ['true', 'false']:
+                value = True if value.lower() == 'true' else False
+            elif not isinstance(value, bool):
+                raise TypeError(f"Expected a boolean (true/false), but got {type(value).__name__}.")
+        else:
+            raise TypeError(f"Unknown type '{expected_type}' for validation.")
+        
     def check_type(self, value, expected_type):
         """Validar el tipo del valor basado en el tipo esperado."""
         type_map = {
@@ -188,20 +215,13 @@ class Interpretar:
     def handle_stardock(self, statement):
         _, condition, true_block, false_block = statement
         condition_value = self.evaluate_expression(condition)
-
+        
         if condition_value:
             self.execute_block(true_block)
         else:
             self.execute_block(false_block)
-
+            
     def evaluate_expression(self, expr):
-        if isinstance(expr, tuple):
-            return self.evaluate_tuple_expression(expr)
-        elif isinstance(expr, (int, float, str, bool)):
-            return expr
-        return None
-
-    def evaluate_tuple_expression(self, expr):
         expr_type = expr[0]
 
         if expr_type == 'num':
@@ -214,18 +234,26 @@ class Interpretar:
             return expr[1]
 
         elif expr_type == 'var':
-            if expr[1] not in self.variables:
-                raise NameError(f"Variable '{expr[1]}' is not defined.")
-            return self.variables[expr[1]]
+            var_name = expr[1]
+            if var_name not in self.variables:
+                raise NameError(f"Variable '{var_name}' is not defined.")
+            return self.variables[var_name]
 
         elif expr_type == 'call_function':
             function_name = expr[1]
             args = expr[2]
-            return self.call_function(function_name, args)  
+            if function_name in self.variables:  # Si es una variable como un vector
+                vector = self.variables[function_name]
+                index = self.evaluate_expression(args[0])
+                if not isinstance(index, int) or index < 0 or index >= len(vector):
+                    raise IndexError(f"Index {index} out of bounds for vector {function_name}.")
+                return vector[index]  # Acceso al vector por índice
+            return self.call_function(function_name, args)
 
         left = self.evaluate_expression(expr[1])
         right = self.evaluate_expression(expr[2])
 
+        # Operaciones aritméticas y booleanas
         if expr_type == 'plus':
             return left + right
         elif expr_type == 'minus':

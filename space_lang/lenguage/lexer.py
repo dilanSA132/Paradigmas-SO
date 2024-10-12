@@ -10,7 +10,7 @@ class Lexer:
             ('STARDUST', r'stardust'),  # Nueva palabra reservada para retornar valores
             ('END_ANDROMEDA', r'endAndromeda'),  # Fin de funciones
             ('AND', r'and'),  # Operador lógico and
-            ('OR', r'or'),  # Operador lógico or
+            
             ('PLANET', r'planet'),  # Declaración de tipos
             ('MERCURY', r'mercury'), # tipo float
             ('VENUS', r'venus'), # tipo string
@@ -33,7 +33,8 @@ class Lexer:
             ('STARPATH', r'starpath'), 
             ('GREATEREQ', r'>='),         
             ('LESSEQ', r'<='),            
-            ('GREATER', r'>'),             
+            ('GREATER', r'>'),    
+            ('OR', r'or'),  # Operador lógico or
             ('LESS', r'<'),                
             ('EQUALS', r'=='),
             ('NOTEQUAL', r'!='), 

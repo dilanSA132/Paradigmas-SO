@@ -6,21 +6,7 @@ def input_callback(prompt):
     return input(prompt)
 
 def main():
-    source_code1 = """
-    andromeda earth suma[planet earth x, planet earth y]:
-        planet earth result = x + y.
-        stardust result.
-    endAndromeda.
 
-    Stellar myVector = [1, 2, 3, 4, 5, 6].
-
-
-
-    planet earth num1 = 10.
-    planet earth num2 = 20.
-
-    star "El resultado es" num1.
-    """
     source_code2 = """
     planet earth variable = 2.
 
@@ -29,7 +15,7 @@ def main():
             star "valor" variable.
         endMeteor.
         meteor 2.
-            star "valor" variable.
+            star "valor1" variable.
         endMeteor.
         commet.
             star "valor" variable.
@@ -39,6 +25,29 @@ def main():
     star "HOLA" variable.
         planet earth num1 = 10.
     planet earth num2 = 20.
+
+     Stellar myVector = [1, 2, 3, 4, 5,6].
+    star "Impresión del vector" myVector.
+
+
+    
+    andromeda earth suma[planet earth x, planet earth y]:
+    planet earth result = x + y.
+    stardust result.
+endAndromeda.
+
+Stellar myVector = [1, 2, 3, 4, 5, 6].
+
+planet earth num1 = 10.
+planet earth num2 = 2.
+
+planet earth sumasdf = suma[num1, num2].   
+star "El resultado es" sumasdf.
+
+
+    orbit j 5 0 1.
+        star "Elemento del vector" myVector[j].
+    endOrbit.
 
     star "El resultado es" num1.
     """

@@ -29,6 +29,36 @@ class Interpretar:
             self.variables[var_name] = value_list
             return value_list
 
+        # Operación para agregar un elemento a un vector
+        elif stmt_type == 'stellar_add':
+            _, vector_name, element = statement
+            element_value = self.evaluate_expression(element)
+            self.stellar_append(vector_name, element_value)
+            return
+
+        # Operación para remover un elemento de un vector por índice
+        elif stmt_type == 'stellar_remove':
+            _, vector_name, index = statement
+            index_value = self.evaluate_expression(index)
+            self.stellar_delete_by_index(vector_name, index_value)
+            return
+
+        # Operación para obtener el tamaño de un vector
+        elif stmt_type == 'stellar_size':
+            _, vector_name = statement
+            size = self.stellar_length(vector_name)
+            self.debug_print(f"Size of '{vector_name}': {size}")
+            self.results.append(f"Size of '{vector_name}': {size}")
+            return size
+
+        # Operación para insertar un elemento en un índice específico de un vector
+        elif stmt_type == 'stellar_place':
+            _, vector_name, index, element = statement
+            index_value = self.evaluate_expression(index)
+            element_value = self.evaluate_expression(element)
+            self.stellar_insert(vector_name, index_value, element_value)
+            return
+
         elif stmt_type == 'print':
             self.handle_print(statement)
 
@@ -123,22 +153,19 @@ class Interpretar:
         return value
 
     def check_type_variable(self, value, expected_type):
-    # Diccionario que mapea los tipos a sus correspondientes tipos de Python
+        """Verifica si el valor es del tipo esperado."""
         type_map = {
             'EARTH': int,
             'MERCURY': float,
             'JUPITER': float,
             'VENUS': str,
-
         }
         if expected_type in type_map:
             if not isinstance(value, type_map[expected_type]):
                 raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
-            
         elif expected_type == 'MARS':
             if value is None:
                 raise TypeError("Expected a boolean, but got None.")
-
             elif isinstance(value, str) and value.lower() in ['true', 'false']:
                 value = True if value.lower() == 'true' else False
             elif not isinstance(value, bool):
@@ -157,6 +184,34 @@ class Interpretar:
         }
         if expected_type in type_map and not isinstance(value, type_map[expected_type]):
             raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
+
+    # Funciones para el manejo de Stellar (vector)
+    def stellar_append(self, vector_name, element):
+        if vector_name not in self.variables:
+            raise NameError(f"Vector '{vector_name}' is not defined.")
+        self.variables[vector_name].append(element)
+        self.debug_print(f"Element {element} added to vector '{vector_name}'")
+
+    def stellar_delete_by_index(self, vector_name, index):
+        if vector_name not in self.variables:
+            raise NameError(f"Vector '{vector_name}' is not defined.")
+        if index < 0 or index >= len(self.variables[vector_name]):
+            raise IndexError(f"Index {index} out of bounds for vector '{vector_name}'.")
+        element = self.variables[vector_name].pop(index)
+        self.debug_print(f"Element {element} at index {index} removed from vector '{vector_name}'")
+
+    def stellar_length(self, vector_name):
+        if vector_name not in self.variables:
+            raise NameError(f"Vector '{vector_name}' is not defined.")
+        return len(self.variables[vector_name])
+
+    def stellar_insert(self, vector_name, index, element):
+        if vector_name not in self.variables:
+            raise NameError(f"Vector '{vector_name}' is not defined.")
+        if index < 0 or index > len(self.variables[vector_name]):
+            raise IndexError(f"Index {index} out of bounds for vector '{vector_name}'.")
+        self.variables[vector_name].insert(index, element)
+        self.debug_print(f"Element {element} inserted at index {index} in vector '{vector_name}'")
 
     def handle_print(self, statement):
         if len(statement) == 3:

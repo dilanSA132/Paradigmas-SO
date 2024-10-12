@@ -7,53 +7,43 @@ def input_callback(prompt):
 
 def main():
 
-    source_code2 = """
-    planet earth variable = 2.
+    source_code = """
+       # Declaración de variables y uso del vector Stellar
 
-    perseids variable.
-        meteor 1.
-            star "valor" variable.
-        endMeteor.
-        meteor 2.
-            star "valor1" variable.
-        endMeteor.
-        commet.
-            star "valor" variable.
-        endCommet.
-    endPerseids.
-        
-    star "HOLA" variable.
-        planet earth num1 = 10.
-    planet earth num2 = 20.
+    # Crear un vector con valores iniciales
+    Stellar myVector = [1, 2, 3, 4, 5].
 
-     Stellar myVector = [1, 2, 3, 4, 5,6].
-    star "Impresión del vector" myVector.
+    # Añadir un nuevo valor al vector
+    stellar_add myVector 6.
+
+    star "Vector después de añadir 6" myVector.
+
+    # Remover el valor en la posición 2 del vector
+    stellar_remove myVector 2.
+
+    star "Vector después de eliminar el índice 2" myVector.
+
+# Mostrar el tamaño actual del vector
+stellar_size myVector.
+
+# Insertar el valor 10 en la posición 1
+stellar_place myVector 1 10.
+
+star "Vector después de insertar 10 en la posición 1" myVector.
+
+
+    # Realizar una operación con el vector dentro de un bucle
+    orbit i 0 4 1.
+        star "Elemento del vector en la posición" myVector[i].
+    endOrbit.
 
 
     
-    andromeda earth suma[planet earth x, planet earth y]:
-    planet earth result = x + y.
-    stardust result.
-endAndromeda.
 
-Stellar myVector = [1, 2, 3, 4, 5, 6].
-
-planet earth num1 = 10.
-planet earth num2 = 2.
-
-planet earth sumasdf = suma[num1, num2].   
-star "El resultado es" sumasdf.
-
-
-    orbit j 5 0 1.
-        star "Elemento del vector" myVector[j].
-    endOrbit.
-
-    star "El resultado es" num1.
     """
 
     # Crear el Lexer con el código fuente
-    lexer = Lexer(source_code2)
+    lexer = Lexer(source_code)
     tokens = lexer.tokenize()
 
     # Mostrar los tokens generados

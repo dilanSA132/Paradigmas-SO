@@ -60,7 +60,33 @@ class Structs:
     def insert_Input_print(self):
         code = "starcatch mynum.\n"
         self.code_input.insert(tk.INSERT, code)
+    def insert_stellar_add(self):
+        code = "stellar_add myVector 6.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_stellar_remove(self):
+        code = "stellar_remove myVector 2.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_stellar_size(self):
+        code = "stellar_size myVector.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_stellar_place(self):
+        code = "stellar_place myVector 1 10.\n"
+        self.code_input.insert(tk.INSERT, code)
 
     def insert_switch_structure(self):
         code = "perseids var1.\n  meteor 1.\n    star \"valor X: \" var1.\n  endMeteor.\n  meteor 2.\n    star \"valor Y: \" var1.\n  endMeteor.\n  commet.\n    star \"valor\" var1.\n  endCommet.\nendPerseids.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insertFunction(self):
+        code = """
+        andromeda earth suma[planet earth x, planet earth y]:
+            planet earth result = x + y.
+            stardust result.
+        endAndromeda.
+
+        planet earth num1 = 10.
+        planet earth num2 = 2.
+
+        planet earth sumasdf = suma[num1, num2].
+        star "El resultado es" sumasdf.
+"""
         self.code_input.insert(tk.INSERT, code)

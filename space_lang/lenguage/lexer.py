@@ -18,6 +18,13 @@ class Lexer:
             ('MARS', r'mars'), # tipo bool
             ('JUPITER', r'jupiter'), # tipo double
             ('STELLAR', r'Stellar'),  # Otros identificadores
+            
+            # Nuevos tokens para operaciones en Stellar
+            ('STELLAR_ADD', r'stellar_add'),  # Añadir elemento
+            ('STELLAR_REMOVE', r'stellar_remove'),  # Eliminar por índice
+            ('STELLAR_SIZE', r'stellar_size'),  # Obtener tamaño
+            ('STELLAR_PLACE', r'stellar_place'),  # Insertar en índice
+
             ('ORBIT', r'orbit'), # Bucle
             ('END_ORBIT', r'endOrbit\.'),   # Fin de bucle
             ('STARDOCK', r'stardock'), # Condicional

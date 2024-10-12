@@ -2,9 +2,11 @@ class Interpretar:
     def __init__(self, ast, input_callback):
         self.ast = ast
         self.variables = {}
+        self.functions = {}
         self.results = []
         self.debug_mode = True
         self.input_callback = input_callback
+        self.current_function = None  # Variable para rastrear la función actual
 
     def evaluate(self):
         for node in self.ast:
@@ -44,9 +46,56 @@ class Interpretar:
 
         elif stmt_type == 'stardock':
             self.handle_stardock(statement)
-        
+
         elif stmt_type == 'perseids':
             self.handle_parseids(statement)
+
+        elif stmt_type == 'function':  # Manejar declaración de funciones
+            _, return_type, function_name, parameters, block = statement
+            self.functions[function_name] = {
+                'return_type': return_type,
+                'parameters': parameters,
+                'block': block
+            }
+            self.debug_print(f"Function {function_name} defined with return type {return_type}")
+
+        elif stmt_type == 'call_function':  # Manejar llamada de funciones
+            function_name = statement[1]
+            args = statement[2]
+            if function_name in self.functions:
+                function_info = self.functions[function_name]
+                parameters = function_info['parameters']
+                block = function_info['block']
+
+                # Verificar que la cantidad de argumentos coincida
+                if len(parameters) != len(args):
+                    raise TypeError(f"Function {function_name} expected {len(parameters)} arguments, got {len(args)}")
+
+                # Asignar valores de argumentos a parámetros
+                local_vars = {}
+                for param, arg in zip(parameters, args):
+                    param_type, param_name = param
+                    arg_value = self.evaluate_expression(arg)
+                    self.check_type(arg_value, param_type)
+                    local_vars[param_name] = arg_value
+
+                # Ejecutar el bloque de la función
+                previous_vars = self.variables.copy()
+                self.variables.update(local_vars)
+                self.current_function = function_info  # Guardar la función actual
+                return_value = self.execute_block(block)
+                self.variables = previous_vars  # Restaurar las variables globales
+
+                # Verificar que el valor de retorno sea del tipo correcto
+                self.check_type(return_value, function_info['return_type'])
+                return return_value
+            else:
+                raise NameError(f"Function {function_name} is not defined.")
+
+        elif stmt_type == 'return':  # Manejar la declaración 'stardust' (return)
+            return_value = self.evaluate_expression(statement[1])
+            self.debug_print(f"Returning value {return_value}")
+            return return_value
 
     def get_variable_type(self, var_name):
         """Determina el tipo de la variable basada en el prefijo del tipo (earth, mercury, venus, etc.)."""
@@ -71,27 +120,16 @@ class Interpretar:
         return value
 
     def check_type(self, value, expected_type):
-    # Diccionario que mapea los tipos a sus correspondientes tipos de Python
+        """Validar el tipo del valor basado en el tipo esperado."""
         type_map = {
             'EARTH': int,
             'MERCURY': float,
             'JUPITER': float,
             'VENUS': str,
+            'MARS': bool,
         }
-        if expected_type in type_map:
-            if not isinstance(value, type_map[expected_type]):
-                raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
-            
-        elif expected_type == 'MARS':
-            if value is None:
-                raise TypeError("Expected a boolean, but got None.")
-
-            elif isinstance(value, str) and value.lower() in ['true', 'false']:
-                value = True if value.lower() == 'true' else False
-            elif not isinstance(value, bool):
-                raise TypeError(f"Expected a boolean (true/false), but got {type(value).__name__}.")
-        else:
-            raise TypeError(f"Unknown type '{expected_type}' for validation.")
+        if expected_type in type_map and not isinstance(value, type_map[expected_type]):
+            raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
 
     def handle_print(self, statement):
         if len(statement) == 3:
@@ -140,8 +178,12 @@ class Interpretar:
             self.debug_print(f"No matching case found for {var_name} with value {var_value}, and no default case provided.")
 
     def execute_block(self, block):
+        return_value = None
         for stmt in block:
-            self.execute_statement(stmt)
+            return_value = self.execute_statement(stmt)
+            if return_value is not None:  # Si la función retorna algo, termina el bloque
+                return return_value
+        return return_value
 
     def handle_stardock(self, statement):
         _, condition, true_block, false_block = statement
@@ -167,10 +209,10 @@ class Interpretar:
 
         elif expr_type == 'string':
             return expr[1]
-        
+
         elif expr_type == 'bool':
             return expr[1]
-        
+
         elif expr_type == 'var':
             return self.variables.get(expr[1], None)
 
@@ -185,7 +227,7 @@ class Interpretar:
 
         left = self.evaluate_expression(expr[1])
         right = self.evaluate_expression(expr[2])
-        
+
         if expr_type == 'plus':
             return left + right
         elif expr_type == 'minus':

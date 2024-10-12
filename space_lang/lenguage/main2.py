@@ -7,33 +7,36 @@ def input_callback(prompt):
 
 def main():
     source_code1 = """
-    planet mars varBoolTrue = true.
-    planet mars varBoolFalse = false.
-    planet earth var1 = 5.
-    planet earth var2 = 5.
-    planet mars varBool = false.
-    planet earth resultIntSum = var1 + var2. 
-    stardock  var1 == var2. 
-        star "Resultado de suma de enteros" resultIntSum.
-    endStardock.
-    supernova.
-        star "HOLA" varBool.
-    endSupernova.
+    andromeda earth suma[planet earth x, planet earth y]:
+        planet earth result = x + y.
+        stardust result.
+    endAndromeda.
+
+
     """
 
+    # Crear el Lexer con el código fuente
     lexer = Lexer(source_code1)
     tokens = lexer.tokenize()
+
+    # Mostrar los tokens generados
     print("=== Tokens ===")
     for token in tokens:
         print(token)
 
+    # Crear el parser con los tokens generados
     parser = Parser(tokens)
     ast = parser.parse()
+
+    # Mostrar el AST (árbol sintáctico abstracto)
     print("\n=== Arbol estructurado (AST) ===")
     for node in ast:
         print(node)
 
+    # Crear el intérprete con el AST
     interpreter = Interpretar(ast, input_callback)
+
+    # Ejecutar la evaluación e interpretar el código
     print("\n=== Resultado de la Evaluación ===")
     interpreter.evaluate()
 

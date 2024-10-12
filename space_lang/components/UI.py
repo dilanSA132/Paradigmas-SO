@@ -18,7 +18,7 @@ class CodeExecutorUI:
             "perseids","endPerseids","meteor","endMeteor","commet","endCommet",
             "endOrbit", "supernova", "endSupernova", "earth", "mars", "mercury", 
             "venus", "jupiter", "true", "false", "andromeda", "stardust", "Stellar",
-            "endAndromeda", "suma", "stardock", "endStardock", "stardust", "stardock"
+            "endAndromeda", "stardock", "endStardock", "stardust", "stardock"
         ]
 
         self.setup_ui()

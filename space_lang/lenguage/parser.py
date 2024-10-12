@@ -85,6 +85,17 @@ class Parser:
             self.pos += 1  # Saltar 'END'
             block = self.parse_block('END_ORBIT')
             return ('orbit', var_name, start_expr, end_expr, interval_expr, block)
+        
+        elif token[0] == 'PERSEIDS':
+            self.pos += 1 
+            var_name = self.tokens[self.pos][1]
+            self.pos += 1  
+            cases = {}
+            default_case = None
+            self.pos+=1
+            cases, default_case = self.parse_cases()
+            self.pos += 1  
+            return ('perseids', var_name, cases, default_case)
 
         else:
             raise SyntaxError(f'Unexpected token: {token} at position {self.pos}')
@@ -100,6 +111,34 @@ class Parser:
         else:
             raise SyntaxError(f"Expected {end_token}, but got {self.tokens[self.pos]} at position {self.pos}")
         return block
+    
+    def parse_cases(self):
+        cases = {}
+        default_case = None
+
+        while self.pos < len(self.tokens) and self.tokens[self.pos][0] != 'END_PERSEIDS':
+            case_token = self.tokens[self.pos]
+
+            if case_token[0] == 'METEOR':
+                self.pos += 1 
+                case_value = self.tokens[self.pos][1]  
+                self.pos += 1  
+                if self.tokens[self.pos][0] == 'END':
+                    self.pos += 1 
+                block = self.parse_block('END_METEOR')
+                cases[case_value] = block
+
+            elif case_token[0] == 'COMMET':
+                self.pos += 1
+                if self.tokens[self.pos][0] == 'END':
+                    self.pos += 1  
+                default_case = self.parse_block('END_COMMET')
+
+            else:
+                raise SyntaxError(f"Unexpected token in perseids: {case_token} at position {self.pos}")
+
+        self.pos += 1 
+        return cases, default_case
 
     def parse_condition(self):
         left = self.parse_expression()

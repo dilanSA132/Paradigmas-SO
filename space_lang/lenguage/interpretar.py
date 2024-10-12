@@ -44,6 +44,9 @@ class Interpretar:
 
         elif stmt_type == 'stardock':
             self.handle_stardock(statement)
+        
+        elif stmt_type == 'perseids':
+            self.handle_parseids(statement)
 
     def get_variable_type(self, var_name):
         """Determina el tipo de la variable basada en el prefijo del tipo (earth, mercury, venus, etc.)."""
@@ -111,6 +114,17 @@ class Interpretar:
                 self.variables[var_name] = i
                 self.execute_block(block)
                 i -= interval_value
+
+    def handle_parseids(self, statement):
+        _, var_name, cases, default_case = statement
+        var_value = self.variables.get(var_name)
+
+        if var_value in cases:
+            self.execute_block(cases[var_value])
+        elif default_case is not None:
+            self.execute_block(default_case)
+        else:
+            self.debug_print(f"No matching case found for {var_name} with value {var_value}, and no default case provided.")
 
     def execute_block(self, block):
         for stmt in block:

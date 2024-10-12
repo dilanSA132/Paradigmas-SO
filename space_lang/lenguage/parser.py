@@ -124,7 +124,6 @@ class Parser:
             default_case = None
             self.pos += 1
             cases, default_case = self.parse_cases()
-            self.pos += 1
             return ('perseids', var_name, cases, default_case)
 
         else:

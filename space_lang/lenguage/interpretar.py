@@ -19,7 +19,7 @@ class Interpretar:
         if stmt_type == 'declare':
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
-            self.check_type(value, var_type)
+            self.check_type_variable(value, var_type)
             self.variables[var_name] = value
             return value
 
@@ -119,6 +119,30 @@ class Interpretar:
             raise TypeError(f"Cannot convert value '{value}' to {var_type}.")
         return value
 
+    def check_type_variable(self, value, expected_type):
+    # Diccionario que mapea los tipos a sus correspondientes tipos de Python
+        type_map = {
+            'EARTH': int,
+            'MERCURY': float,
+            'JUPITER': float,
+            'VENUS': str,
+
+        }
+        if expected_type in type_map:
+            if not isinstance(value, type_map[expected_type]):
+                raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
+            
+        elif expected_type == 'MARS':
+            if value is None:
+                raise TypeError("Expected a boolean, but got None.")
+
+            elif isinstance(value, str) and value.lower() in ['true', 'false']:
+                value = True if value.lower() == 'true' else False
+            elif not isinstance(value, bool):
+                raise TypeError(f"Expected a boolean (true/false), but got {type(value).__name__}.")
+        else:
+            raise TypeError(f"Unknown type '{expected_type}' for validation.")
+        
     def check_type(self, value, expected_type):
         """Validar el tipo del valor basado en el tipo esperado."""
         type_map = {
@@ -188,7 +212,7 @@ class Interpretar:
     def handle_stardock(self, statement):
         _, condition, true_block, false_block = statement
         condition_value = self.evaluate_expression(condition)
-
+        
         if condition_value:
             self.execute_block(true_block)
         else:

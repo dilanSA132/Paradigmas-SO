@@ -237,7 +237,7 @@ class Parser:
         elif token[0] == 'STRING':
             return ('string', token[1])
         elif token[0] == 'TRUE' or token[0] == 'FALSE':
-            return ('bool', token[1])
+            return ('bool', token[1].lower())
         elif token[0] == 'ID':
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'LPAREN':
                 self.pos += 1 

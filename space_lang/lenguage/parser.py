@@ -264,7 +264,7 @@ class Parser:
     def parse_list(self):
         elements = []
         if self.tokens[self.pos][0] == 'LPAREN':
-            self.pos += 1  
+            self.pos += 1  # Saltar 'LPAREN'
         while self.tokens[self.pos][0] != 'RPAREN':
             elements.append(self.parse_expression())
             if self.tokens[self.pos][0] == 'COMMA':

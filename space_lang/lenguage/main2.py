@@ -12,10 +12,14 @@ def main():
         stardust result.
     endAndromeda.
 
+    Stellar myVector = [1, 2, 3, 4, 5, 6].
+
+
+
     planet earth num1 = 10.
     planet earth num2 = 20.
-    planet earth resultado = suma[num1, num2].
-    star "El resultado es" resultado.
+
+    star "El resultado es" num1.
     """
 
     # Crear el Lexer con el código fuente

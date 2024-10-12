@@ -2,8 +2,6 @@ import tkinter as tk
 from lenguage.lexer import Lexer
 from lenguage.parser import Parser
 from lenguage.interpretar import Interpretar
-import threading
-import time
 
 class CodeExecutor:
     def __init__(self, code_input, tokens_display, ast_display, result_display):
@@ -11,26 +9,10 @@ class CodeExecutor:
         self.tokens_display = tokens_display
         self.ast_display = ast_display
         self.result_display = result_display
-        self.animating = False
 
     def execute_code(self):
         source_code = self.code_input.get("1.0", "end-1c")
 
-        # Empezar la animación de compilación
-        self.animating = True
-        self.result_display.config(state="normal")
-        self.result_display.delete("1.0", "end")
-        self.result_display.insert("end", "Compilando", "output")
-        self.result_display.config(state="disabled")
-        
-        self.animate_loading()
-
-        # Iniciar la ejecución en un hilo separado
-        thread = threading.Thread(target=self.run_interpreter, args=(source_code,))
-        thread.start()
-
-    def run_interpreter(self, source_code):
-        start_time = time.time()  # Registrar el tiempo de inicio
         try:
             lexer = Lexer(source_code)
             tokens = lexer.tokenize()
@@ -43,32 +25,10 @@ class CodeExecutor:
             # Pasar la función de entrada al intérprete
             interpreter = Interpretar(ast, self.get_input_from_user)
             results = interpreter.evaluate()
-
-            # Asegurarse de que la animación dure al menos 3 segundos
-            elapsed_time = time.time() - start_time
-            remaining_time = 3 - elapsed_time
-            if remaining_time > 0:
-                self.result_display.after(int(remaining_time * 1000), lambda: self.stop_animation_and_show_results(results))
-            else:
-                self.stop_animation_and_show_results(results)
+            self.show_results(results)
 
         except Exception as e:
-            elapsed_time = time.time() - start_time
-            remaining_time = 3 - elapsed_time
-            if remaining_time > 0:
-                self.result_display.after(int(remaining_time * 1000), lambda: self.stop_animation_and_show_error(f"Error: {str(e)}"))
-            else:
-                self.stop_animation_and_show_error(f"Error: {str(e)}")
-
-    def stop_animation_and_show_results(self, results):
-        """Detener la animación y mostrar los resultados."""
-        self.animating = False
-        self.show_results(results)
-
-    def stop_animation_and_show_error(self, error_message):
-        """Detener la animación y mostrar el mensaje de error."""
-        self.animating = False
-        self.display_error(error_message)
+            self.display_error(f"Error: {str(e)}")
 
     def get_input_from_user(self, prompt):
         """Muestra un cuadro de diálogo personalizado para capturar la entrada del usuario."""
@@ -98,22 +58,6 @@ class CodeExecutor:
         dialog.wait_window()  # Esperar a que el cuadro de diálogo se cierre
 
         return result["value"]
-
-    def animate_loading(self):
-        """Animación de texto 'Compilando' con puntos suspensivos."""
-        if self.animating:
-            current_text = self.result_display.get("1.0", "end-1c")
-            if current_text.endswith("..."):
-                self.result_display.config(state="normal")
-                self.result_display.delete("1.0", "end")
-                self.result_display.insert("end", "Compilando", "output")
-            else:
-                self.result_display.config(state="normal")
-                self.result_display.insert("end", ".", "output")
-            self.result_display.config(state="disabled")
-
-            # Repetir la animación cada 500ms
-            self.result_display.after(500, self.animate_loading)
 
     def show_tokens(self, tokens):
         self.tokens_display.config(state="normal")

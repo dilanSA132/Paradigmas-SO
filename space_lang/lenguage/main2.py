@@ -12,7 +12,10 @@ def main():
         stardust result.
     endAndromeda.
 
-
+    planet earth num1 = 10.
+    planet earth num2 = 20.
+    planet earth resultado = suma[num1, num2].
+    star "El resultado es" resultado.
     """
 
     # Crear el Lexer con el código fuente

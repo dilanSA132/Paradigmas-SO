@@ -6,7 +6,7 @@ class Interpretar:
         self.results = []
         self.debug_mode = True
         self.input_callback = input_callback
-        self.current_function = None  # Variable para rastrear la función actual
+        self.current_function = None  
 
     def evaluate(self):
         for node in self.ast:
@@ -50,7 +50,7 @@ class Interpretar:
         elif stmt_type == 'perseids':
             self.handle_parseids(statement)
 
-        elif stmt_type == 'function':  # Manejar declaración de funciones
+        elif stmt_type == 'function':  
             _, return_type, function_name, parameters, block = statement
             self.functions[function_name] = {
                 'return_type': return_type,
@@ -59,43 +59,43 @@ class Interpretar:
             }
             self.debug_print(f"Function {function_name} defined with return type {return_type}")
 
-        elif stmt_type == 'call_function':  # Manejar llamada de funciones
+        elif stmt_type == 'call_function': 
             function_name = statement[1]
             args = statement[2]
-            if function_name in self.functions:
-                function_info = self.functions[function_name]
-                parameters = function_info['parameters']
-                block = function_info['block']
+            return self.call_function(function_name, args)
 
-                # Verificar que la cantidad de argumentos coincida
-                if len(parameters) != len(args):
-                    raise TypeError(f"Function {function_name} expected {len(parameters)} arguments, got {len(args)}")
-
-                # Asignar valores de argumentos a parámetros
-                local_vars = {}
-                for param, arg in zip(parameters, args):
-                    param_type, param_name = param
-                    arg_value = self.evaluate_expression(arg)
-                    self.check_type(arg_value, param_type)
-                    local_vars[param_name] = arg_value
-
-                # Ejecutar el bloque de la función
-                previous_vars = self.variables.copy()
-                self.variables.update(local_vars)
-                self.current_function = function_info  # Guardar la función actual
-                return_value = self.execute_block(block)
-                self.variables = previous_vars  # Restaurar las variables globales
-
-                # Verificar que el valor de retorno sea del tipo correcto
-                self.check_type(return_value, function_info['return_type'])
-                return return_value
-            else:
-                raise NameError(f"Function {function_name} is not defined.")
-
-        elif stmt_type == 'return':  # Manejar la declaración 'stardust' (return)
+        elif stmt_type == 'return': 
             return_value = self.evaluate_expression(statement[1])
             self.debug_print(f"Returning value {return_value}")
-            return return_value
+            return return_value  
+
+    def call_function(self, function_name, args):
+        if function_name not in self.functions:
+            raise NameError(f"Function {function_name} is not defined.")
+
+        function_info = self.functions[function_name]
+        parameters = function_info['parameters']
+        block = function_info['block']
+
+        if len(parameters) != len(args):
+            raise TypeError(f"Function {function_name} expected {len(parameters)} arguments, got {len(args)}")
+
+        local_vars = {}
+        for param, arg in zip(parameters, args):
+            param_type, param_subtype, param_name = param
+            arg_value = self.evaluate_expression(arg)
+            self.check_type(arg_value, param_subtype)
+            local_vars[param_name] = arg_value
+
+        previous_vars = self.variables.copy()
+        self.variables.update(local_vars)
+        return_value = self.execute_block(block)  
+        self.variables = previous_vars  
+        if return_value is None:
+            raise ValueError(f"Function {function_name} did not return a value.")
+    
+        self.check_type(return_value, function_info['return_type'])
+        return return_value
 
     def get_variable_type(self, var_name):
         """Determina el tipo de la variable basada en el prefijo del tipo (earth, mercury, venus, etc.)."""
@@ -107,13 +107,13 @@ class Interpretar:
     def convert_value(self, value, var_type):
         """Convierte el valor de entrada según el tipo de la variable."""
         try:
-            if var_type == 'earth':  # Se espera un entero
+            if var_type == 'earth': 
                 return int(value)
-            elif var_type == 'mercury' or var_type == 'jupiter':  # Se espera un flotante
+            elif var_type == 'mercury' or var_type == 'jupiter':
                 return float(value)
-            elif var_type == 'venus':  # Se espera una cadena
+            elif var_type == 'venus': 
                 return str(value)
-            elif var_type == 'mars':  # Se espera un booleano
+            elif var_type == 'mars': 
                 return value.lower() == 'true'
         except ValueError:
             raise TypeError(f"Cannot convert value '{value}' to {var_type}.")
@@ -181,7 +181,7 @@ class Interpretar:
         return_value = None
         for stmt in block:
             return_value = self.execute_statement(stmt)
-            if return_value is not None:  # Si la función retorna algo, termina el bloque
+            if return_value is not None: 
                 return return_value
         return return_value
 
@@ -214,16 +214,14 @@ class Interpretar:
             return expr[1]
 
         elif expr_type == 'var':
-            return self.variables.get(expr[1], None)
+            if expr[1] not in self.variables:
+                raise NameError(f"Variable '{expr[1]}' is not defined.")
+            return self.variables[expr[1]]
 
-        elif expr_type == 'index_access':
-            vector_name = expr[1]
-            index = self.evaluate_expression(expr[2])
-            vector = self.variables.get(vector_name, None)
-            if isinstance(vector, list) and 0 <= index < len(vector):
-                return vector[index]
-            else:
-                raise IndexError(f'Index {index} out of bounds for vector {vector_name}')
+        elif expr_type == 'call_function':
+            function_name = expr[1]
+            args = expr[2]
+            return self.call_function(function_name, args)  
 
         left = self.evaluate_expression(expr[1])
         right = self.evaluate_expression(expr[2])

@@ -25,83 +25,82 @@ class Parser:
             self.pos += 1
             var_name = self.tokens[self.pos][1]
             self.pos += 1
-            self.pos += 1  # Saltar 'ASSIGN'
+            self.pos += 1  
             expr = self.parse_expression()
-            self.pos += 1  # Saltar 'END'
+            self.pos += 1  
             if self.tokens[self.pos][0] == 'END':
-                self.pos += 1  # Saltar '.'
+                self.pos += 1  
             return ('declare', var_type, var_name, expr)
 
         elif token[0] == 'STELLAR':
             self.pos += 1
             var_name = self.tokens[self.pos][1]
             self.pos += 1
-            self.pos += 1  # Saltar 'ASSIGN'
+            self.pos += 1  
             expr_list = self.parse_list()
-            self.pos += 1  # Saltar 'END'
+            self.pos += 1  
             if self.tokens[self.pos][0] == 'END':
-                self.pos += 1  # Saltar '.'
+                self.pos += 1  
             return ('declare_vector', var_name, expr_list)
 
-        elif token[0] == 'STARDUST':  # Manejar 'stardust' como retorno
-            self.pos += 1  # Saltar 'stardust'
-            expr = self.parse_expression()  # Parsear la expresión que se va a retornar
+        elif token[0] == 'STARDUST':  
+            self.pos += 1  
+            expr = self.parse_expression()  
             if self.tokens[self.pos][0] == 'END':
-                self.pos += 1  # Saltar 'END'
+                self.pos += 1 
             return ('return', expr)
 
-        elif token[0] == 'ANDROMEDA':  # Declaración de funciones
-            self.pos += 1  # Saltar 'andromeda'
-            return_type = self.tokens[self.pos][0]  # Tipo de retorno de la función (earth, venus, etc.)
+        elif token[0] == 'ANDROMEDA': 
+            self.pos += 1 
+            return_type = self.tokens[self.pos][0]  
             self.pos += 1
-            function_name = self.tokens[self.pos][1]  # Nombre de la función
+            function_name = self.tokens[self.pos][1]  
             self.pos += 1
-            self.pos += 1  # Saltar 'LPAREN'
-            parameters = self.parse_parameters()  # Parsear parámetros
-            self.pos += 1  # Saltar 'RPAREN'
+            self.pos += 1  
+            parameters = self.parse_parameters()  
+            self.pos += 1 
 
-            # Verificar que haya un ':'
             if self.tokens[self.pos][0] != 'COLON':
                 raise SyntaxError(f"Expected ':', but got {self.tokens[self.pos]} at position {self.pos}")
             
-            self.pos += 1  # Saltar ':'
+            self.pos += 1  
 
-            block = self.parse_block('END_ANDROMEDA')  # Parsear el bloque de la función
+            block = self.parse_block('END_ANDROMEDA')  
             return ('function', return_type, function_name, parameters, block)
 
         elif token[0] == 'STARDOCK':
             self.pos += 1
             condition = self.parse_condition()
-            self.pos += 1  # Saltar 'END' que sigue a la condición
+            self.pos += 1  
             true_block = self.parse_block('END_STARDOCK')
             false_block = []
 
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'SUPERNOVA':
-                self.pos += 1  # Saltar 'SUPERNOVA'
-                self.pos += 1  # Saltar 'END'
+                self.pos += 1
+                self.pos += 1 
                 false_block = self.parse_block('END_SUPERNOVA')
 
             return ('stardock', condition, true_block, false_block)
 
         elif token[0] == 'ID' and token[1] == 'star':
-            self.pos += 1  # Saltar 'star'
+            self.pos += 1  
             message = self.parse_expression()
             if self.tokens[self.pos][0] == 'COLON':
-                self.pos += 1  # Saltar 'COLON'
+                self.pos += 1  
             if self.tokens[self.pos][0] != 'END':
                 expr = self.parse_expression()
-                self.pos += 1  # Saltar 'END'
+                self.pos += 1  
                 return ('print', message, expr)
             else:
-                self.pos += 1  # Solo imprimir el mensaje
+                self.pos += 1  
                 return ('print', message)
 
         elif token[0] == 'ID' and token[1] == 'starcatch':
-            self.pos += 1  # Saltar 'starcatch'
+            self.pos += 1  
             var_name = self.tokens[self.pos][1]
-            self.pos += 1  # Saltar la variable
+            self.pos += 1  
             if self.tokens[self.pos][0] == 'END':
-                self.pos += 1  # Saltar 'END'
+                self.pos += 1  
                 return ('starcatch', var_name)
             else:
                 raise SyntaxError(f"Expected end of statement but got {self.tokens[self.pos]}")
@@ -113,7 +112,7 @@ class Parser:
             start_expr = self.parse_expression()
             end_expr = self.parse_expression()
             interval_expr = self.parse_expression()
-            self.pos += 1  # Saltar 'END'
+            self.pos += 1  
             block = self.parse_block('END_ORBIT')
             return ('orbit', var_name, start_expr, end_expr, interval_expr, block)
 
@@ -138,9 +137,9 @@ class Parser:
             if statement:
                 block.append(statement)
         if self.pos < len(self.tokens) and self.tokens[self.pos][0] == end_token:
-            self.pos += 1  # Saltar el 'end' correspondiente (END_STARDOCK, END_SUPERNOVA, END_ANDROMEDA, etc.)
+            self.pos += 1 
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'END':
-                self.pos += 1  # Saltar '.' después del end del bloque
+                self.pos += 1 
         else:
             raise SyntaxError(f"Expected {end_token}, but got {self.tokens[self.pos]} at position {self.pos}")
         return block
@@ -177,28 +176,27 @@ class Parser:
         parameters = []
         
         while self.pos < len(self.tokens) and self.tokens[self.pos][0] != 'RPAREN':
-            param_type = self.tokens[self.pos][0]  # Primer parte del tipo (ej: 'PLANET')
+            param_type = self.tokens[self.pos][0]
             self.pos += 1
             
             if self.pos >= len(self.tokens) or self.tokens[self.pos][0] not in ('MERCURY', 'VENUS', 'EARTH', 'MARS', 'JUPITER'):
                 raise SyntaxError(f"Expected a subtype like 'earth' after {param_type}, but got {self.tokens[self.pos]}")
 
-            param_subtype = self.tokens[self.pos][0]  # Subtipo (ej: 'earth')
+            param_subtype = self.tokens[self.pos][0] 
             self.pos += 1
             
-            if self.pos >= len(self.tokens):  # Verificar si el token aún está en rango
+            if self.pos >= len(self.tokens):  
                 raise SyntaxError(f"Unexpected end of input, expected parameter name after {param_subtype}")
             
-            param_name = self.tokens[self.pos][1]  # Nombre del parámetro
+            param_name = self.tokens[self.pos][1]  
             self.pos += 1
             
             parameters.append((param_type, param_subtype, param_name))
             
-            # Verificar si el próximo token es una coma o el cierre del paréntesis
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'COMMA':
-                self.pos += 1  # Saltar la coma
+                self.pos += 1  
             elif self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'RPAREN':
-                break  # Encontramos el cierre del paréntesis
+                break
             else:
                 raise SyntaxError(f"Expected ',' or ']', but got {self.tokens[self.pos]} at position {self.pos}")
         
@@ -243,25 +241,33 @@ class Parser:
             return ('bool', token[1])
         elif token[0] == 'ID':
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'LPAREN':
-                self.pos += 1  # Saltar 'LPAREN'
-                index_expr = self.parse_expression()
-                self.pos += 1  # Saltar 'RPAREN'
-                return ('index_access', token[1], index_expr)
+                self.pos += 1 
+                args = self.parse_arguments() 
+                self.pos += 1 
+                return ('call_function', token[1], args) 
             return ('var', token[1])
         elif token[0] == 'LPAREN':
             expr = self.parse_expression()
-            self.pos += 1  # Saltar 'RPAREN'
+            self.pos += 1  
             return expr
         else:
             raise SyntaxError(f'Invalid expression: {token} at position {self.pos}')
 
+    def parse_arguments(self):
+        args = []
+        while self.tokens[self.pos][0] != 'RPAREN':
+            args.append(self.parse_expression())
+            if self.tokens[self.pos][0] == 'COMMA':
+                self.pos += 1 
+        return args
+
     def parse_list(self):
         elements = []
         if self.tokens[self.pos][0] == 'LPAREN':
-            self.pos += 1  # Saltar 'LPAREN'
+            self.pos += 1  
         while self.tokens[self.pos][0] != 'RPAREN':
             elements.append(self.parse_expression())
             if self.tokens[self.pos][0] == 'COMMA':
-                self.pos += 1  # Saltar 'COMMA'
-        self.pos += 1  # Saltar 'RPAREN'
+                self.pos += 1  
+        self.pos += 1  
         return elements

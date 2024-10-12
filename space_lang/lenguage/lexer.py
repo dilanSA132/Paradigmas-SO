@@ -12,19 +12,19 @@ class Lexer:
             ('AND', r'and'),  # Operador lógico and
             ('OR', r'or'),  # Operador lógico or
             ('PLANET', r'planet'),  # Declaración de tipos
-            ('MERCURY', r'mercury'),
-            ('VENUS', r'venus'),
-            ('EARTH', r'earth'),
-            ('MARS', r'mars'),
-            ('JUPITER', r'jupiter'),
+            ('MERCURY', r'mercury'), # tipo float
+            ('VENUS', r'venus'), # tipo string
+            ('EARTH', r'earth'), # tipo int 
+            ('MARS', r'mars'), # tipo bool
+            ('JUPITER', r'jupiter'), # tipo double
             ('STELLAR', r'Stellar'),  # Otros identificadores
-            ('ORBIT', r'orbit'),
-            ('END_ORBIT', r'endOrbit\.'),
-            ('STARDOCK', r'stardock'),
-            ('END_STARDOCK', r'endStardock\.'),
-            ('SUPERNOVA', r'supernova'),
-            ('END_SUPERNOVA', r'endSupernova\.'),
-            ('PERSEIDS', r'perseids'),
+            ('ORBIT', r'orbit'), # Bucle
+            ('END_ORBIT', r'endOrbit\.'),   # Fin de bucle
+            ('STARDOCK', r'stardock'), # Condicional
+            ('END_STARDOCK', r'endStardock\.'), # Fin de condicional
+            ('SUPERNOVA', r'supernova'), # Función
+            ('END_SUPERNOVA', r'endSupernova\.'), # Fin de función
+            ('PERSEIDS', r'perseids'), 
             ('END_PERSEIDS', r'endPerseids\.'),
             ('METEOR', r'meteor'),
             ('END_METEOR', r'endMeteor\.'),
@@ -66,25 +66,23 @@ class Lexer:
         line_start = 0
 
         for mo in re.finditer(self.token_regex, self.source_code):
-            kind = mo.lastgroup  # Tipo de token detectado
-            value = mo.group(kind)  # Valor del token
+            kind = mo.lastgroup  
+            value = mo.group(kind)  
 
-            # Manejo de nuevas líneas para rastrear errores
             if kind == 'NEWLINE':
                 line_number += 1
                 line_start = mo.end()
                 continue
 
             if kind == 'NUMBER':
-                value = float(value) if '.' in value else int(value)  # Convertir números
+                value = float(value) if '.' in value else int(value)  
             elif kind == 'STRING':
-                value = value[1:-1]  # Eliminar las comillas de las cadenas
+                value = value[1:-1]  
             elif kind in ('SKIP', 'COMMENT'):
-                continue  # Ignorar espacios y comentarios
+                continue  
             elif kind == 'MISMATCH':
-                raise RuntimeError(f'Unexpected character "{value}" at line {line_number}')  # Error por caracteres inesperados
+                raise RuntimeError(f'Unexpected character "{value}" at line {line_number}')  
 
-            # Agregar el token a la lista
             self.tokens.append((kind, value))
         
         return self.tokens

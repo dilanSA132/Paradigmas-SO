@@ -135,7 +135,7 @@ class CodeExecutorUI:
         keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet)\b"
         integers = r"\b\d+\b"  
         floats = r"\b\d+\.\d+\b"  
-        booleans = r"\b(true|false)\b" 
+        booleans = r"\b((?i:true)|(?i:false))\b" 
         strings = r'"[^"]*"'
         comments = r'#.*'
         planets = r"\b(earth|mars|mercury|venus|jupiter)\b"  

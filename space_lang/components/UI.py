@@ -14,8 +14,8 @@ class CodeExecutorUI:
         self.execute_callback = execute_callback
 
         self.keywords = ["planet", "star", "starcatch", "orbit", "stardock", "endStardock", 
-                         "endOrbit", "supernova", "endSupernova", "earth", "mars", 
-                         "mercury", "venus", "jupiter", "true", "false"]
+                         "perseids","endPerseids","meteor","endMeteor","commet","endCommet","endOrbit",  
+                         "supernova", "endSupernova", "earth", "mars","mercury", "venus", "jupiter", "true", "false"]
 
         self.setup_ui()
         self.create_menu()
@@ -24,6 +24,9 @@ class CodeExecutorUI:
         self.code_input.bind("<KeyRelease>", self.on_key_release)
 
     def setup_ui(self):
+        style = ttk.Style()
+        style.theme_use('default')
+
         main_frame = tk.Frame(self.root, bg="#1e1e1e")
         main_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -40,6 +43,7 @@ class CodeExecutorUI:
 
         self.code_input = scrolledtext.ScrolledText(code_frame, wrap=tk.WORD, bg="#2d2d30", fg="#dcdcdc", insertbackground="white", font=("Consolas", 12))
         self.code_input.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
         self.code_input.tag_configure("keyword", foreground="#569cd6")
         self.code_input.tag_configure("number", foreground="#b5cea8")
         self.code_input.tag_configure("string", foreground="#ce9178")
@@ -105,6 +109,7 @@ class CodeExecutorUI:
         insert_menu.add_command(label="Declaración de vector", command=self.structs.insert_vector_declaration)
         insert_menu.add_command(label="Impresión de vector", command=self.structs.insert_vector_print)
         insert_menu.add_command(label="Selector de Variable", command=self.structs.insert_Input_print)
+        insert_menu.add_command(label="Switch", command=self.structs.insert_switch_structure)
 
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)
         self.root.config(menu=menu_bar)
@@ -127,7 +132,7 @@ class CodeExecutorUI:
         self.code_input.tag_remove("string_var", "1.0", tk.END)
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
-        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova)\b"
+        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet)\b"
         integers = r"\b\d+\b"  
         floats = r"\b\d+\.\d+\b"  
         booleans = r"\b(true|false)\b" 

@@ -27,6 +27,7 @@ class Parser:
             self.pos += 1  # Saltar 'ASSIGN'
             expr = self.parse_expression()
             self.pos += 1  # Saltar 'END'
+            print('declare', var_type, var_name, expr)
             return ('declare', var_type, var_name, expr)
 
         elif token[0] == 'STELLAR':
@@ -175,6 +176,8 @@ class Parser:
             return ('num', token[1])
         elif token[0] == 'STRING':
             return ('string', token[1])
+        elif token[0] == 'TRUE' or token[0] == 'FALSE':
+            return ('bool', token[1])
         elif token[0] == 'ID':
             if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'LPAREN':
                 self.pos += 1  # Saltar 'LPAREN'

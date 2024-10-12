@@ -68,3 +68,7 @@ class Structs:
     def insert_Input_print(self):
         code = "starcatch \" mynum.\n"
         self.code_input.insert(tk.INSERT, code)
+
+    def insert_switch_structure(self):
+        code = "perseids var1.\n  meteor 1.\n\tstar \"valor X: \" var1.\n  endMeteor.\n  meteor 2.\n\t star \"valor Y: \" var1.\n  endMeteor.\n  commet.\n\tstar \"valor\" var1.\n  endCommet.\nendPerseids.\n"
+        self.code_input.insert(tk.INSERT, code)

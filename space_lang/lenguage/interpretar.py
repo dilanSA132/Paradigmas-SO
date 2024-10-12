@@ -71,14 +71,27 @@ class Interpretar:
         return value
 
     def check_type(self, value, expected_type):
-        if expected_type == 'earth' and not isinstance(value, int):
-            raise TypeError(f"Expected an integer, but got {type(value).__name__}.")
-        elif expected_type in ['mercury', 'jupiter'] and not isinstance(value, float):
-            raise TypeError(f"Expected a float, but got {type(value).__name__}.")
-        elif expected_type == 'venus' and not isinstance(value, str):
-            raise TypeError(f"Expected a string, but got {type(value).__name__}.")
-        elif expected_type == 'mars' and not isinstance(value, bool):
-            raise TypeError(f"Expected a boolean, but got {type(value).__name__}.")
+    # Diccionario que mapea los tipos a sus correspondientes tipos de Python
+        type_map = {
+            'EARTH': int,
+            'MERCURY': float,
+            'JUPITER': float,
+            'VENUS': str,
+        }
+        if expected_type in type_map:
+            if not isinstance(value, type_map[expected_type]):
+                raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
+            
+        elif expected_type == 'MARS':
+            if value is None:
+                raise TypeError("Expected a boolean, but got None.")
+
+            elif isinstance(value, str) and value.lower() in ['true', 'false']:
+                value = True if value.lower() == 'true' else False
+            elif not isinstance(value, bool):
+                raise TypeError(f"Expected a boolean (true/false), but got {type(value).__name__}.")
+        else:
+            raise TypeError(f"Unknown type '{expected_type}' for validation.")
 
     def handle_print(self, statement):
         if len(statement) == 3:
@@ -142,7 +155,7 @@ class Interpretar:
     def evaluate_expression(self, expr):
         if isinstance(expr, tuple):
             return self.evaluate_tuple_expression(expr)
-        elif isinstance(expr, (int, float, str)):
+        elif isinstance(expr, (int, float, str, bool)):
             return expr
         return None
 
@@ -154,7 +167,10 @@ class Interpretar:
 
         elif expr_type == 'string':
             return expr[1]
-
+        
+        elif expr_type == 'bool':
+            return expr[1]
+        
         elif expr_type == 'var':
             return self.variables.get(expr[1], None)
 

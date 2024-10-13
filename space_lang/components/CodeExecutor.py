@@ -29,7 +29,7 @@ class CodeExecutor:
 
         except Exception as e:
             self.display_error(f"Error: {str(e)}")
-
+            
     def get_input_from_user(self, prompt):
         """Muestra un cuadro de diálogo personalizado para capturar la entrada del usuario."""
         dialog = tk.Toplevel(self.code_input)
@@ -38,11 +38,19 @@ class CodeExecutor:
         dialog.geometry("400x150")
         dialog.grab_set()  # Hacer que el diálogo sea modal
 
+        # Centrar la ventana en la pantalla
+        dialog.update_idletasks()
+        width = dialog.winfo_width()
+        height = dialog.winfo_height()
+        x = (dialog.winfo_screenwidth() // 2) - (width // 2)
+        y = (dialog.winfo_screenheight() // 2) - (height // 2)
+        dialog.geometry(f"{width}x{height}+{x}+{y}")
+
         label = tk.Label(dialog, text=prompt, bg="#1e1e1e", fg="#dcdcdc", font=("Consolas", 12))
-        label.pack(pady=10)
+        label.pack(pady=10, anchor="center")  # Centrar el label
 
         entry = tk.Entry(dialog, bg="#2d2d30", fg="#dcdcdc", insertbackground="white", font=("Consolas", 12))
-        entry.pack(pady=10)
+        entry.pack(pady=10, anchor="center")  # Centrar el campo de texto
         entry.focus_set()
 
         result = {"value": None}
@@ -52,12 +60,13 @@ class CodeExecutor:
             dialog.destroy()
 
         submit_button = tk.Button(dialog, text="Aceptar", command=on_submit, bg="#333333", fg="#FFD700", font=("Helvetica", 12))
-        submit_button.pack(pady=10)
+        submit_button.pack(pady=10, anchor="center")  # Centrar el botón
 
         dialog.bind("<Return>", lambda event: on_submit())
         dialog.wait_window()  # Esperar a que el cuadro de diálogo se cierre
 
         return result["value"]
+
 
     def show_tokens(self, tokens):
         self.tokens_display.config(state="normal")

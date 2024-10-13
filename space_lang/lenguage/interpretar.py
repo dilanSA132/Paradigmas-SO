@@ -63,14 +63,15 @@ class Interpretar:
             self.handle_print(statement)
 
         elif stmt_type == 'starcatch':
-            _, var_name = statement
+            _, message, var_name = statement
             var_type = self.get_variable_type(var_name)
-            value = self.input_callback(f"Enter a value for {var_name}: ")
+            prompt_message = message if message else f"Enter a value for {var_name}: "
+            value = self.input_callback(prompt_message)
             value = self.convert_value(value, var_type)
             self.variables[var_name] = value
             self.debug_print(f"Captured input for {var_name} ({var_type}): {value}")
             self.results.append(f"Input captured for {var_name}: {value}")
-
+            
         elif stmt_type == 'orbit':
             self.handle_orbit(statement)
 

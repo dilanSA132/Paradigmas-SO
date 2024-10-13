@@ -142,14 +142,18 @@ class Parser:
                 self.pos += 1  
                 return ('print', message)
 
-        # Manejo de captura de entrada 'starcatch'
         elif token[0] == 'ID' and token[1] == 'starcatch':
             self.pos += 1  
+            if self.tokens[self.pos][0] == 'STRING':  # Verificar si hay un mensaje personalizado
+                message = self.tokens[self.pos][1]
+                self.pos += 1
+            else:
+                message = ""
             var_name = self.tokens[self.pos][1]
-            self.pos += 1  
+            self.pos += 1
             if self.tokens[self.pos][0] == 'END':
-                self.pos += 1  
-                return ('starcatch', var_name)
+                self.pos += 1
+                return ('starcatch', message, var_name)
             else:
                 raise SyntaxError(f"Expected end of statement but got {self.tokens[self.pos]}")
 

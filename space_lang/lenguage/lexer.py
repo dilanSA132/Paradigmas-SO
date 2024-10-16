@@ -19,6 +19,13 @@ class Lexer:
             ('JUPITER', r'jupiter'), # tipo double
             ('CONSTELLATION', r'Constellation'),
             ('STELLAR', r'Stellar'),  # Otros identificadores
+            ('ASTRO',r'Astro'), # Pila
+
+            # Nuevos tokens para operaciones en Astro
+            ('ASTRO_LAUNCH', r'astro_launch'),  # Añadir elemento
+            ('ASTRO_REENTRY', r'astro_reentry'),  # Eliminar 
+            ('ASTRO_ORBITTOP', r'astro_orbittop'),  # Obtener el número tope
+            ('ASTRO_ISVACUUM', r'astro_isvacuum'),  # Verificar si esta vacia
 
             # Nuevos tokens para operaciones en Stellar
             ('STELLAR_ADD', r'stellar_add'),  # Añadir elemento

@@ -19,7 +19,8 @@ class CodeExecutorUI:
             "endOrbit", "supernova", "endSupernova", "earth", "mars", "mercury", 
             "venus", "jupiter", "true", "false", "andromeda", "stardust", "Stellar",
             "endAndromeda", "stardock", "endStardock", "stardust", "stardock",
-            "stellar_add", "stellar_remove", "stellar_size", "stellar_place","Constellation"
+            "stellar_add", "stellar_remove", "stellar_size", "stellar_place","Constellation",
+            "Astro","astro_launch","astro_reentry","astro_orbittop","astro_isvacuum"
         ]
 
         self.setup_ui()
@@ -122,6 +123,13 @@ class CodeExecutorUI:
         insert_menu.add_command(label="Eliminar elemento de la lista", command=self.structs.insert_stellar_remove)   
         insert_menu.add_command(label="Obtener tamaño de la lista", command=self.structs.insert_stellar_size)    
         insert_menu.add_command(label="Insertar en la lista", command=self.structs.insert_stellar_place)
+
+        insert_menu.add_command(label="Declaración de pila", command=self.structs.insert_astro_declaration)
+        insert_menu.add_command(label="Método push de pila", command=self.structs.insert_astro_push)
+        insert_menu.add_command(label="Método pop de pila", command=self.structs.insert_astro_pop)
+        insert_menu.add_command(label="Método top de pila", command=self.structs.insert_astro_top)
+        insert_menu.add_command(label="Método es vacio de pila", command=self.structs.insert_astro_empty)
+
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)
         self.root.config(menu=menu_bar)
 
@@ -143,7 +151,7 @@ class CodeExecutorUI:
         self.code_input.tag_remove("string_var", "1.0", tk.END)
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
-        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar|stellar_add|stellar_remove|stellar_size|stellar_place|Constellation)\b"
+        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar|stellar_add|stellar_remove|stellar_size|stellar_place|Constellation|Astro|astro_launch|astro_reentry|astro_orbittop|astro_isvacuum)\b"
         integers = r"\b\d+\b"  # Resalta números enteros
         floats = r"\b\d+\.\d+\b"  # Resalta números flotantes
         booleans = r"\b((?i:true)|(?i:false))\b"  # Resalta valores booleanos true/false insensibles a mayúsculas

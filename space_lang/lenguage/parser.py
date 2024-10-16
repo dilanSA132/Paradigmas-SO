@@ -56,7 +56,50 @@ class Parser:
                 self.pos += 1  # Saltar el punto final '.'
                 return ('declare_vector', var_name, expr_list)
             # Manejo de la declaración de un vector 'Stellar'
+        elif token[0] == 'ASTRO':
+            self.pos += 1  
+            var_name = self.tokens[self.pos][1]  
+            self.pos += 1 
+            if self.tokens[self.pos][0] == 'ASSIGN':  
+                self.pos += 1  
+                expr_list = self.parse_list()  
+                self.pos += 1  
+                return ('declare_vector', var_name, expr_list)
+            
+        elif token[0] == 'ASTRO_LAUNCH':
+            self.pos += 1
+            stack_name = self.tokens[self.pos][1]
+            self.pos += 1
+            element = self.parse_expression()  
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('astro_launch', stack_name, element)
 
+        elif token[0] == 'ASTRO_REENTRY':
+            self.pos += 1
+            vector_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('astro_reentry', vector_name)
+        
+        elif token[0] == 'ASTRO_ORBITTOP':
+            self.pos += 1
+            stack_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            print('astro_orbittop', stack_name)
+            return ('astro_orbittop', stack_name)
+
+        elif token[0] == 'ASTRO_ISVACUUM':
+            self.pos += 1
+            vector_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('astro_isvacuum', vector_name)
+            
         # Manejo de la función 'stellar_add'
         elif token[0] == 'STELLAR_ADD':
             self.pos += 1

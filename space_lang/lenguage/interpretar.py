@@ -28,7 +28,31 @@ class Interpretar:
             value_list = [self.evaluate_expression(expr) for expr in expr_list]
             self.variables[var_name] = value_list
             return value_list
+        #Operación push de Astro 
+        elif stmt_type == 'astro_launch':
+            _, list_name, element = statement
+            element_value = self.evaluate_expression(element)
+            self.astro_append(list_name, element_value)
+            return
 
+        # Operación pop de Astro 
+        elif stmt_type == 'astro_reentry':
+            _, list_name = statement
+            #index_value = self.evaluate_expression(index)
+            self.astro_delete_top(list_name)
+            return 
+        # Operación top de Astro 
+        elif stmt_type == 'astro_orbittop':
+            _, list_name = statement
+            top = self.astro_top(list_name)
+            self.debug_print(f"Value top of '{list_name}': {top}")
+            self.results.append(f"Value top of '{list_name}': {top}")
+            return top
+        #Operación si esta vacío de Astro 
+        elif stmt_type == 'astro_isvacuum':
+            _, list_name = statement
+            self.astro_is_vacuum(list_name)
+            return
         # Operación para agregar un elemento a un vector
         elif stmt_type == 'stellar_add':
             _, vector_name, element = statement
@@ -185,6 +209,32 @@ class Interpretar:
         }
         if expected_type in type_map and not isinstance(value, type_map[expected_type]):
             raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
+
+     # Funciones para el manejo de Astro (pila)
+    def astro_append(self, list_name, element):
+        if list_name not in self.variables:
+            raise NameError(f"Astro '{list_name}' is not defined.")
+        self.variables[list_name].append(element)
+        self.debug_print(f"Element {element} added to astro '{list_name}'")
+
+    def astro_delete_top(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"List '{list_name}' is not defined.")
+        element = self.variables[list_name].pop()
+        self.debug_print(f"Element {element} at top index removed from list '{list_name}'")
+
+    def astro_top(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"List '{list_name}' is not defined.")
+        if not self.variables[list_name]:  # Verifica si la lista está vacía
+            raise IndexError(f"List '{list_name}' is empty.")
+        return self.variables[list_name][-1]  # Retorna el último elemento
+
+
+    def astro_is_vacuum(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"List '{list_name}' is not defined.")
+        return len(self.variables[list_name]) == 0
 
     # Funciones para el manejo de Stellar (vector)
     def stellar_append(self, vector_name, element):

@@ -81,6 +81,22 @@ class Structs:
         code = "stellar_place myList 1 10.\n"
         self.code_input.insert(tk.INSERT, code)
 
+    def insert_astro_declaration(self):
+        code = "Astro stack = [0, 20, 23, 4, 51, 6].\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_astro_push(self):
+        code = "astro_launch stack 3.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_astro_pop(self):
+        code = "astro_reentry stack.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_astro_top(self):
+        code = "astro_orbittop stack.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_astro_empty(self):
+        code = "astro_isvacuum stack.\n"
+        self.code_input.insert(tk.INSERT, code)
+    
     def insert_switch_structure(self):
         code = "perseids var1.\n  meteor 1.\n    star \"valor X: \" var1.\n  endMeteor.\n  meteor 2.\n    star \"valor Y: \" var1.\n  endMeteor.\n  commet.\n    star \"valor\" var1.\n  endCommet.\nendPerseids.\n"
         self.code_input.insert(tk.INSERT, code)

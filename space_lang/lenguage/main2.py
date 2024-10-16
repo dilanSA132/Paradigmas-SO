@@ -41,9 +41,31 @@ star "Vector después de insertar 10 en la posición 1" myVector.
     
 
     """
+    source_code2 = """
+    # Declaración de variables y uso del vector Stellar
+    Astro myVector2 = [0, 20, 23, 4, 51, 6].
+    astro_launch myVector2 3.
+    astro_launch myVector2 36.
+    
+    astro_orbittop myVector2.
+    astro_reentry myVector2.
+    astro_isvacuum myVector2.
+    # Crear un vector con valores iniciales
+
+    orbit i 0 6 1.
+        star "Elemento del vector en la posicion" myVector2[i].
+    endOrbit.
+
+
+    
+
+
+    
+
+    """
 
     # Crear el Lexer con el código fuente
-    lexer = Lexer(source_code)
+    lexer = Lexer(source_code2)
     tokens = lexer.tokenize()
 
     # Mostrar los tokens generados

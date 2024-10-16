@@ -33,7 +33,18 @@ class Parser:
                 if self.tokens[self.pos][0] == 'END':
                     self.pos += 1  
                 return ('declare', var_type, var_name, expr)
-
+        
+        elif token[0] == 'CONSTELLATION':
+            self.pos += 1
+            var_name = self.tokens[self.pos][1]
+            self.pos += 1
+            self.pos += 1  
+            expr_list = self.parse_list()
+            self.pos += 1  
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1  
+            return ('declare_vector', var_name, expr_list)
+        
         # Manejo de la declaración de un vector 'Stellar'
         elif token[0] == 'STELLAR':
             self.pos += 1  # Saltar la palabra clave 'Stellar'
@@ -44,6 +55,7 @@ class Parser:
                 expr_list = self.parse_list()  # Parsear la lista de elementos entre []
                 self.pos += 1  # Saltar el punto final '.'
                 return ('declare_vector', var_name, expr_list)
+            # Manejo de la declaración de un vector 'Stellar'
 
         # Manejo de la función 'stellar_add'
         elif token[0] == 'STELLAR_ADD':

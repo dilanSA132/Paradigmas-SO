@@ -50,27 +50,35 @@ class Structs:
         self.code_input.insert(tk.INSERT, code)
 
     def insert_vector_declaration(self):
-        code = "Stellar myVector = [1, 2, 3, 4, 5, 6].\n"
+        code = "Constellation myVector = [0, 20, 23, 4, 51, 6].\n"
         self.code_input.insert(tk.INSERT, code)
 
     def insert_vector_print(self):
         code = "star \"Impresión del vector\" myVector.\n"
         self.code_input.insert(tk.INSERT, code)
 
+    def insert_list_declaration(self):
+        code = "Stellar myList = [1, 2, 3, 4, 5, 6].\n"
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_list_print(self):
+        code = "star \"Impresión de la lista\" myList.\n"
+        self.code_input.insert(tk.INSERT, code)
+
     def insert_Input_print(self):
         code = "starcatch mynum.\n"
         self.code_input.insert(tk.INSERT, code)
     def insert_stellar_add(self):
-        code = "stellar_add myVector 6.\n"
+        code = "stellar_add myList 6.\n"
         self.code_input.insert(tk.INSERT, code)
     def insert_stellar_remove(self):
-        code = "stellar_remove myVector 2.\n"
+        code = "stellar_remove myList 2.\n"
         self.code_input.insert(tk.INSERT, code)
     def insert_stellar_size(self):
-        code = "stellar_size myVector.\n"
+        code = "stellar_size myList.\n"
         self.code_input.insert(tk.INSERT, code)
     def insert_stellar_place(self):
-        code = "stellar_place myVector 1 10.\n"
+        code = "stellar_place myList 1 10.\n"
         self.code_input.insert(tk.INSERT, code)
 
     def insert_switch_structure(self):

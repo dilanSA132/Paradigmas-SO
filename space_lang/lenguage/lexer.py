@@ -17,8 +17,9 @@ class Lexer:
             ('EARTH', r'earth'), # tipo int 
             ('MARS', r'mars'), # tipo bool
             ('JUPITER', r'jupiter'), # tipo double
+            ('CONSTELLATION', r'Constellation'),
             ('STELLAR', r'Stellar'),  # Otros identificadores
-            
+
             # Nuevos tokens para operaciones en Stellar
             ('STELLAR_ADD', r'stellar_add'),  # Añadir elemento
             ('STELLAR_REMOVE', r'stellar_remove'),  # Eliminar por índice

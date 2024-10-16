@@ -9,7 +9,7 @@ def main():
 
     source_code = """
        # Declaración de variables y uso del vector Stellar
-
+    Constellation myVector2 = [0, 20, 23, 4, 51, 6].
     # Crear un vector con valores iniciales
     Stellar myVector = [1, 2, 3, 4, 5].
 
@@ -34,7 +34,7 @@ star "Vector después de insertar 10 en la posición 1" myVector.
 
     # Realizar una operación con el vector dentro de un bucle
     orbit i 0 4 1.
-        star "Elemento del vector en la posición" myVector[i].
+        star "Elemento del vector en la posición" myVector2[i].
     endOrbit.
 
 

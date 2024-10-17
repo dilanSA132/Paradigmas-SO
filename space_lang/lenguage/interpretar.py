@@ -52,7 +52,12 @@ class Interpretar:
             _, list_name = statement
             return self.astro_is_vacuum(list_name)
         # Operación para agregar un elemento a un vector
-
+        elif stmt_type == 'astro_count':
+            _, list_name = statement
+            size = self.astro_length(list_name)
+            self.debug_print(f"Size of '{list_name}': {size}")
+            self.results.append(f"Size of '{list_name}': {size}")
+            return size
 
         elif stmt_type == 'nebula_eventhorizon':
             _, list_name, element = statement
@@ -266,6 +271,11 @@ class Interpretar:
             raise NameError(f"Astro '{list_name}' is not defined.")
         print(len(self.variables[list_name]))
         return (len(self.variables[list_name]) <= 0)
+    
+    def astro_length(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"Astro '{list_name}' is not defined.")
+        return len(self.variables[list_name])
 
      # Funciones para el manejo de Nebula (queue)
     def nebula_append(self, list_name, element):
@@ -422,6 +432,10 @@ class Interpretar:
             # Evalúa el argumento de la función, que debe ser el nombre de la lista
             list_name = expr[1]
             return self.nebula_length(list_name)
+        elif expr_type == 'astro_count':
+            # Evalúa el argumento de la función, que debe ser el nombre de la lista
+            list_name = expr[1]
+            return self.astro_length(list_name)
         
         elif expr_type == 'call_function':
             function_name = expr[1]

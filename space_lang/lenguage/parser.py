@@ -100,6 +100,14 @@ class Parser:
                 self.pos += 1
             return ('astro_isvacuum', stack_name)
         
+        elif token[0] == 'ASTRO_COUNT':
+            self.pos += 1
+            stack_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('astro_count', stack_name)
+        
         elif token[0] == 'NEBULA':
             self.pos += 1  
             var_name = self.tokens[self.pos][1]  
@@ -422,6 +430,11 @@ class Parser:
             stack_name = self.tokens[self.pos][1]
             self.pos += 1
             return ('astro_isvacuum', stack_name)
+        
+        elif token[0] == 'ASTRO_COUNT':  # Añadir esto para manejar 'stellar_size'
+            stack_name = self.tokens[self.pos][1]
+            self.pos += 1
+            return ('astro_count', stack_name)
         
         elif token[0] == 'NEBULA_ISVACUUM': 
             queue_name = self.tokens[self.pos][1]

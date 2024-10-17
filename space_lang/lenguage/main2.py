@@ -47,11 +47,16 @@ star "Vector después de insertar 10 en la posición 1" myVector.
     astro_launch myVector2 3.
     astro_launch myVector2 36.
     
-    astro_orbittop myVector2.
+    astro_orbitTop myVector2.
     astro_reentry myVector2.
-    planet mars varBoolTrue = astro_isvacuum myVector2.
+    planet mars varBoolTrue = astro_isVacuum myVector2.
     # Crear un vector con valores iniciales
+    Astro stack = [0, 20, 23, 4, 51, 6].
 
+    planet earth var1 = 0.
+    planet earth var2 = astro_count stack.
+
+    star "Impresión de la lista" var2.
     orbit i 0 6 1.
         star "Elemento del vector en la posicion" myVector2[i].
     endOrbit.

@@ -96,6 +96,9 @@ class Structs:
     def insert_astro_empty(self):
         code = "astro_isVacuum stack.\n"
         self.code_input.insert(tk.INSERT, code)
+    def insert_astro_size(self):
+        code = "astro_count stack.\n"
+        self.code_input.insert(tk.INSERT, code)
 
     def insert_nebula_declaration(self):
         code = "Nebula queue = [1, 12, 23, 44, 51, 67].\n"

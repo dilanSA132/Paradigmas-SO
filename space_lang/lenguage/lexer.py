@@ -26,7 +26,7 @@ class Lexer:
             ('ASTRO_REENTRY', r'astro_reentry'),  # Eliminar 
             ('ASTRO_ORBITTOP', r'astro_orbitTop'),  # Obtener el número tope
             ('ASTRO_ISVACUUM', r'astro_isVacuum'),  # Verificar si esta vacia
-
+            ('ASTRO_COUNT', r'astro_count'),
             # Nuevos tokens para operaciones en Astro
             ('NEBULA_EVENTHORIZON', r'nebula_eventHorizon'),  # Añadir elemento
             ('NEBULA_LIGHTSPEED', r'nebula_lightSpeed'),  # Eliminar 

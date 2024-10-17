@@ -20,13 +20,20 @@ class Lexer:
             ('CONSTELLATION', r'Constellation'),
             ('STELLAR', r'Stellar'),  # Otros identificadores
             ('ASTRO',r'Astro'), # Pila
-
+            ('NEBULA',r'Nebula'),
             # Nuevos tokens para operaciones en Astro
             ('ASTRO_LAUNCH', r'astro_launch'),  # Añadir elemento
             ('ASTRO_REENTRY', r'astro_reentry'),  # Eliminar 
-            ('ASTRO_ORBITTOP', r'astro_orbittop'),  # Obtener el número tope
-            ('ASTRO_ISVACUUM', r'astro_isvacuum'),  # Verificar si esta vacia
+            ('ASTRO_ORBITTOP', r'astro_orbitTop'),  # Obtener el número tope
+            ('ASTRO_ISVACUUM', r'astro_isVacuum'),  # Verificar si esta vacia
 
+            # Nuevos tokens para operaciones en Astro
+            ('NEBULA_EVENTHORIZON', r'nebula_eventHorizon'),  # Añadir elemento
+            ('NEBULA_LIGHTSPEED', r'nebula_lightSpeed'),  # Eliminar 
+            ('NEBULA_CORE', r'nebula_core'),  # Obtener el número tope
+            ('NEBULA_ISVACUUM', r'nebula_isVacuum'),  # Verificar si esta vacia
+            ('NEBULA_COSMICFLOW',r'nebula_cosmicFlow'),
+            
             # Nuevos tokens para operaciones en Stellar
             ('STELLAR_ADD', r'stellar_add'),  # Añadir elemento
             ('STELLAR_REMOVE', r'stellar_remove'),  # Eliminar por índice

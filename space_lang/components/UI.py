@@ -20,7 +20,8 @@ class CodeExecutorUI:
             "venus", "jupiter", "true", "false", "andromeda", "stardust", "Stellar",
             "endAndromeda", "stardock", "endStardock", "stardust", "stardock",
             "stellar_add", "stellar_remove", "stellar_size", "stellar_place","Constellation",
-            "Astro","astro_launch","astro_reentry","astro_orbittop","astro_isvacuum"
+            "Astro","astro_launch","astro_reentry","astro_orbittop","astro_isvacuum",
+            "Nebula","nebula_eventHorizon","nebula_lightSpeed","nebula_core","nebula_isVacuum","nebula_cosmicFlow"
         ]
 
         self.setup_ui()
@@ -130,6 +131,13 @@ class CodeExecutorUI:
         insert_menu.add_command(label="Método top de pila", command=self.structs.insert_astro_top)
         insert_menu.add_command(label="Método es vacio de pila", command=self.structs.insert_astro_empty)
 
+        insert_menu.add_command(label="Declaración de cola", command=self.structs.insert_nebula_declaration)
+        insert_menu.add_command(label="Método queue de cola", command=self.structs.insert_nebula_enqueue)
+        insert_menu.add_command(label="Método dequeue de cola", command=self.structs.insert_nebula_dequeue)
+        insert_menu.add_command(label="Método front de cola", command=self.structs.insert_nebula_front)
+        insert_menu.add_command(label="Método es vacio de cola", command=self.structs.insert_nebula_empty)
+        insert_menu.add_command(label="Obtener tamaño de la cola", command=self.structs.insert_nebula_size)
+        
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)
         self.root.config(menu=menu_bar)
 
@@ -151,7 +159,7 @@ class CodeExecutorUI:
         self.code_input.tag_remove("string_var", "1.0", tk.END)
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
-        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar|stellar_add|stellar_remove|stellar_size|stellar_place|Constellation|Astro|astro_launch|astro_reentry|astro_orbittop|astro_isvacuum)\b"
+        keywords = r"\b(planet|star|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar|stellar_add|stellar_remove|stellar_size|stellar_place|Constellation|Astro|astro_launch|astro_reentry|astro_orbittop|astro_isvacuum|Nebula|nebula_eventHorizon|nebula_lightSpeed|nebula_core|nebula_isVacuum|nebula_cosmicFlow)\b"
         integers = r"\b\d+\b"  # Resalta números enteros
         floats = r"\b\d+\.\d+\b"  # Resalta números flotantes
         booleans = r"\b((?i:true)|(?i:false))\b"  # Resalta valores booleanos true/false insensibles a mayúsculas

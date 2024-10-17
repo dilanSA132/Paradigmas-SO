@@ -77,11 +77,11 @@ class Parser:
 
         elif token[0] == 'ASTRO_REENTRY':
             self.pos += 1
-            vector_name = self.tokens[self.pos][1]
+            stack_name = self.tokens[self.pos][1]
             self.pos += 1
             if self.tokens[self.pos][0] == 'END':
                 self.pos += 1
-            return ('astro_reentry', vector_name)
+            return ('astro_reentry', stack_name)
         
         elif token[0] == 'ASTRO_ORBITTOP':
             self.pos += 1
@@ -94,12 +94,63 @@ class Parser:
 
         elif token[0] == 'ASTRO_ISVACUUM':
             self.pos += 1
-            vector_name = self.tokens[self.pos][1]
+            stack_name = self.tokens[self.pos][1]
             self.pos += 1
             if self.tokens[self.pos][0] == 'END':
                 self.pos += 1
-            return ('astro_isvacuum', vector_name)
+            return ('astro_isvacuum', stack_name)
+        
+        elif token[0] == 'NEBULA':
+            self.pos += 1  
+            var_name = self.tokens[self.pos][1]  
+            self.pos += 1 
+            if self.tokens[self.pos][0] == 'ASSIGN':  
+                self.pos += 1  
+                expr_list = self.parse_list()  
+                self.pos += 1  
+                return ('declare_vector', var_name, expr_list)
             
+        elif token[0] == 'NEBULA_EVENTHORIZON':
+            self.pos += 1
+            queue_name = self.tokens[self.pos][1]
+            self.pos += 1
+            element = self.parse_expression()  
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('nebula_eventhorizon', queue_name, element)
+
+        elif token[0] == 'NEBULA_LIGHTSPEED':
+            self.pos += 1
+            queue_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('nebula_lightspeed', queue_name)
+        
+        elif token[0] == 'NEBULA_CORE':
+            self.pos += 1
+            queue_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('nebula_core', queue_name)
+
+        elif token[0] == 'NEBULA_ISVACUUM':
+            self.pos += 1
+            queue_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('nebula_isvacuum', queue_name)
+        
+        elif token[0] == 'NEBULA_COSMICFLOW':
+            self.pos += 1
+            queue_name = self.tokens[self.pos][1]
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'END':
+                self.pos += 1
+            return ('nebula_cosmicflow', queue_name)
+        
         # Manejo de la función 'stellar_add'
         elif token[0] == 'STELLAR_ADD':
             self.pos += 1
@@ -368,9 +419,19 @@ class Parser:
             self.pos += 1
             return ('stellar_size', vector_name)
         elif token[0] == 'ASTRO_ISVACUUM': 
-            vector_name = self.tokens[self.pos][1]
+            stack_name = self.tokens[self.pos][1]
             self.pos += 1
-            return ('astro_isvacuum', vector_name)
+            return ('astro_isvacuum', stack_name)
+        
+        elif token[0] == 'NEBULA_ISVACUUM': 
+            queue_name = self.tokens[self.pos][1]
+            self.pos += 1
+            return ('nebula_isvacuum', queue_name)
+        elif token[0] == 'NEBULA_COSMICFLOW': 
+            queue_name = self.tokens[self.pos][1]
+            self.pos += 1
+            return ('nebula_cosmicflow', queue_name)
+        
         elif token[0] == 'LPAREN':
             expr = self.parse_expression()
             self.pos += 1  

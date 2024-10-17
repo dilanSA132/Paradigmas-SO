@@ -34,7 +34,6 @@ class Interpretar:
             element_value = self.evaluate_expression(element)
             self.astro_append(list_name, element_value)
             return
-
         # Operación pop de Astro 
         elif stmt_type == 'astro_reentry':
             _, list_name = statement
@@ -51,15 +50,46 @@ class Interpretar:
         #Operación si esta vacío de Astro 
         elif stmt_type == 'astro_isvacuum':
             _, list_name = statement
-            #print(self.astro_is_vacuum(list_name))
             return self.astro_is_vacuum(list_name)
         # Operación para agregar un elemento a un vector
+
+
+        elif stmt_type == 'nebula_eventhorizon':
+            _, list_name, element = statement
+            element_value = self.evaluate_expression(element)
+            self.nebula_append(list_name, element_value)
+            return
+        # Operación pop de Astro 
+        elif stmt_type == 'nebula_lightspeed':
+            _, list_name = statement
+            #index_value = self.evaluate_expression(index)
+            self.nebula_delete_front(list_name)
+            return 
+        # Operación top de Astro 
+        elif stmt_type == 'nebula_core':
+            _, list_name = statement
+            front = self.nebula_front(list_name)
+            self.debug_print(f"Value front of '{list_name}': {front}")
+            self.results.append(f"Value front of '{list_name}': {front}")
+            return front
+        #Operación si esta vacío de Astro 
+        elif stmt_type == 'nebula_isvacuum':
+            _, list_name = statement
+            return self.astro_is_vacuum(list_name)
+        # Operación para agregar un elemento a un vector
+                # Operación para obtener el tamaño de un vector
+        elif stmt_type == 'nebula_cosmicflow':
+            _, list_name = statement
+            size = self.nebula_length(list_name)
+            self.debug_print(f"Size of '{list_name}': {size}")
+            self.results.append(f"Size of '{list_name}': {size}")
+            return size
+
         elif stmt_type == 'stellar_add':
             _, vector_name, element = statement
             element_value = self.evaluate_expression(element)
             self.stellar_append(vector_name, element_value)
             return
-
         # Operación para remover un elemento de un vector por índice
         elif stmt_type == 'stellar_remove':
             _, vector_name, index = statement
@@ -219,24 +249,55 @@ class Interpretar:
 
     def astro_delete_top(self, list_name):
         if list_name not in self.variables:
-            raise NameError(f"List '{list_name}' is not defined.")
+            raise NameError(f"Astro '{list_name}' is not defined.")
         element = self.variables[list_name].pop()
         self.debug_print(f"Element {element} at top index removed from list '{list_name}'")
 
     def astro_top(self, list_name):
         if list_name not in self.variables:
-            raise NameError(f"List '{list_name}' is not defined.")
+            raise NameError(f"Astro '{list_name}' is not defined.")
         if not self.variables[list_name]:  # Verifica si la lista está vacía
-            raise IndexError(f"List '{list_name}' is empty.")
+            raise IndexError(f"Astro '{list_name}' is empty.")
         return self.variables[list_name][-1]  # Retorna el último elemento
 
 
     def astro_is_vacuum(self, list_name):
         if list_name not in self.variables:
-            raise NameError(f"List '{list_name}' is not defined.")
+            raise NameError(f"Astro '{list_name}' is not defined.")
         print(len(self.variables[list_name]))
         return (len(self.variables[list_name]) <= 0)
 
+     # Funciones para el manejo de Nebula (queue)
+    def nebula_append(self, list_name, element):
+        if list_name not in self.variables:
+            raise NameError(f"Nebula '{list_name}' is not defined.")
+        self.variables[list_name].append(element)
+        self.debug_print(f"Element {element} added to astro '{list_name}'")
+
+    def nebula_delete_front(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"Nebula '{list_name}' is not defined.")
+        element = self.variables[list_name].pop(0)
+        self.debug_print(f"Element {element} at front index removed from list '{list_name}'")
+
+    def nebula_front(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"Nebula '{list_name}' is not defined.")
+        if not self.variables[list_name]:  # Verifica si la lista está vacía
+            raise IndexError(f"Nebula '{list_name}' is empty.")
+        return self.variables[list_name][0]  # Retorna el primer elemento
+    
+    def nebula_is_vacuum(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"Nebula '{list_name}' is not defined.")
+        print(len(self.variables[list_name]))
+        return (len(self.variables[list_name]) <= 0)
+    
+    def nebula_length(self, list_name):
+        if list_name not in self.variables:
+            raise NameError(f"Nebula '{list_name}' is not defined.")
+        return len(self.variables[list_name])
+    
     # Funciones para el manejo de Stellar (vector)
     def stellar_append(self, vector_name, element):
         if vector_name not in self.variables:
@@ -351,6 +412,16 @@ class Interpretar:
             if self.astro_is_vacuum(list_name):
                 return "True"
             return "False"
+        elif expr_type == 'nebula_isvacuum':
+            # Evalúa el argumento de la función, que debe ser el nombre de la lista
+            list_name = expr[1]
+            if self.nebula_is_vacuum(list_name):
+                return "True"
+            return "False"
+        elif expr_type == 'nebula_cosmicflow':
+            # Evalúa el argumento de la función, que debe ser el nombre de la lista
+            list_name = expr[1]
+            return self.nebula_length(list_name)
         
         elif expr_type == 'call_function':
             function_name = expr[1]

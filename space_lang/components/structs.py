@@ -91,10 +91,29 @@ class Structs:
         code = "astro_reentry stack.\n"
         self.code_input.insert(tk.INSERT, code)
     def insert_astro_top(self):
-        code = "astro_orbittop stack.\n"
+        code = "astro_orbitTop stack.\n"
         self.code_input.insert(tk.INSERT, code)
     def insert_astro_empty(self):
-        code = "astro_isvacuum stack.\n"
+        code = "astro_isVacuum stack.\n"
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_nebula_declaration(self):
+        code = "Nebula queue = [1, 12, 23, 44, 51, 67].\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_nebula_enqueue(self):
+        code = "nebula_eventHorizon queue 78.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_nebula_dequeue(self):
+        code = "nebula_lightSpeed queue.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_nebula_front(self):
+        code = "nebula_core queue.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_nebula_empty(self):
+        code = "nebula_isVacuum queue.\n"
+        self.code_input.insert(tk.INSERT, code)
+    def insert_nebula_size(self):
+        code = "nebula_cosmicFlow queue.\n"
         self.code_input.insert(tk.INSERT, code)
     
     def insert_switch_structure(self):

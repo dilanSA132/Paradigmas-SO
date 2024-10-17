@@ -49,7 +49,7 @@ star "Vector después de insertar 10 en la posición 1" myVector.
     
     astro_orbittop myVector2.
     astro_reentry myVector2.
-    astro_isvacuum myVector2.
+    planet mars varBoolTrue = astro_isvacuum myVector2.
     # Crear un vector con valores iniciales
 
     orbit i 0 6 1.

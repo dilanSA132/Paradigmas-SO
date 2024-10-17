@@ -367,6 +367,10 @@ class Parser:
             vector_name = self.tokens[self.pos][1]
             self.pos += 1
             return ('stellar_size', vector_name)
+        elif token[0] == 'ASTRO_ISVACUUM': 
+            vector_name = self.tokens[self.pos][1]
+            self.pos += 1
+            return ('astro_isvacuum', vector_name)
         elif token[0] == 'LPAREN':
             expr = self.parse_expression()
             self.pos += 1  

@@ -51,8 +51,8 @@ class Interpretar:
         #Operación si esta vacío de Astro 
         elif stmt_type == 'astro_isvacuum':
             _, list_name = statement
-            self.astro_is_vacuum(list_name)
-            return
+            #print(self.astro_is_vacuum(list_name))
+            return self.astro_is_vacuum(list_name)
         # Operación para agregar un elemento a un vector
         elif stmt_type == 'stellar_add':
             _, vector_name, element = statement
@@ -234,7 +234,8 @@ class Interpretar:
     def astro_is_vacuum(self, list_name):
         if list_name not in self.variables:
             raise NameError(f"List '{list_name}' is not defined.")
-        return len(self.variables[list_name]) == 0
+        print(len(self.variables[list_name]))
+        return (len(self.variables[list_name]) <= 0)
 
     # Funciones para el manejo de Stellar (vector)
     def stellar_append(self, vector_name, element):
@@ -344,7 +345,13 @@ class Interpretar:
             if var_name not in self.variables:
                 raise NameError(f"Variable '{var_name}' is not defined.")
             return self.variables[var_name]
-
+        elif expr_type == 'astro_isvacuum':
+            # Evalúa el argumento de la función, que debe ser el nombre de la lista
+            list_name = expr[1]
+            if self.astro_is_vacuum(list_name):
+                return "True"
+            return "False"
+        
         elif expr_type == 'call_function':
             function_name = expr[1]
             args = expr[2]

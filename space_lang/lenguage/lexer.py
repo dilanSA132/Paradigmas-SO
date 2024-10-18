@@ -21,13 +21,13 @@ class Lexer:
             ('STELLAR', r'Stellar'),  # Otros identificadores
             ('ASTRO',r'Astro'), # Pila
             ('NEBULA',r'Nebula'),
-            # Nuevos tokens para operaciones en Astro
+            # Nuevos tokens para operaciones en Astro (pilas)
             ('ASTRO_LAUNCH', r'astro_launch'),  # Añadir elemento
             ('ASTRO_REENTRY', r'astro_reentry'),  # Eliminar 
             ('ASTRO_ORBITTOP', r'astro_orbitTop'),  # Obtener el número tope
             ('ASTRO_ISVACUUM', r'astro_isVacuum'),  # Verificar si esta vacia
             ('ASTRO_COUNT', r'astro_count'),
-            # Nuevos tokens para operaciones en Astro
+            # Nuevos tokens para operaciones en Nebula (colas)
             ('NEBULA_EVENTHORIZON', r'nebula_eventHorizon'),  # Añadir elemento
             ('NEBULA_LIGHTSPEED', r'nebula_lightSpeed'),  # Eliminar 
             ('NEBULA_CORE', r'nebula_core'),  # Obtener el número tope
@@ -44,13 +44,13 @@ class Lexer:
             ('END_ORBIT', r'endOrbit\.'),   # Fin de bucle
             ('STARDOCK', r'stardock'), # Condicional
             ('END_STARDOCK', r'endStardock\.'), # Fin de condicional
-            ('SUPERNOVA', r'supernova'), # Función
-            ('END_SUPERNOVA', r'endSupernova\.'), # Fin de función
-            ('PERSEIDS', r'perseids'), 
+            ('SUPERNOVA', r'supernova'), # else 
+            ('END_SUPERNOVA', r'endSupernova\.'), 
+            ('PERSEIDS', r'perseids'), #switch
             ('END_PERSEIDS', r'endPerseids\.'),
-            ('METEOR', r'meteor'),
+            ('METEOR', r'meteor'), #case del switch
             ('END_METEOR', r'endMeteor\.'),
-            ('COMMET', r'commet'),
+            ('COMMET', r'commet'), # case default
             ('END_COMMET', r'endCommet\.'),
             ('STARPATH', r'starpath'), 
             ('GREATEREQ', r'>='),         

@@ -23,7 +23,6 @@ class Interpretar:
             if var_type.lower() != self.get_type_from_value(value).lower():
                 value = self.cast_value(value, var_type.lower())
 
-            self.check_type_variable(value, var_type.lower()) 
             self.variables[var_name] = value  
             return value
 
@@ -68,13 +67,12 @@ class Interpretar:
             element_value = self.evaluate_expression(element)
             self.nebula_append(list_name, element_value)
             return
-        # Operación pop de Astro 
+        
         elif stmt_type == 'nebula_lightspeed':
             _, list_name = statement
-            #index_value = self.evaluate_expression(index)
             self.nebula_delete_front(list_name)
             return 
-        # Operación top de Astro 
+        
         elif stmt_type == 'nebula_core':
             _, list_name = statement
             front = self.nebula_front(list_name)
@@ -179,7 +177,6 @@ class Interpretar:
             param_type, param_subtype, param_name = param
             arg_value = self.evaluate_expression(arg)
 
-            # Verificar si el argumento necesita un cast
             if param_subtype.lower() != self.get_type_from_value(arg_value).lower():
                 arg_value = self.cast_value(arg_value, param_subtype.lower())
 
@@ -223,21 +220,36 @@ class Interpretar:
             'mars': bool,
         }
         return not isinstance(value, type_map.get(expected_type, type(value)))
-    
+            
     def cast_value(self, value, target_type):
         """ Realiza el cast de un valor a otro tipo """
         if target_type == 'venus' and isinstance(value, int):
-            return str(value)  # Convierte de int (earth) a string (venus)
+            return str(value) 
         elif target_type == 'earth' and isinstance(value, str):
+            if value.lower() == "true":
+                return 1 
+            elif value.lower() == "false":
+                return 0 
             try:
-                return int(value)  # Convierte de string (venus) a int (earth)
+                return int(value)  
             except ValueError:
                 raise TypeError(f"Cannot cast string '{value}' to earth (int)")
-        elif target_type == 'mercury' and isinstance(value, int):
-            return float(value)  # Convierte de int a float (mercury)
+        elif target_type == 'earth' and isinstance(value, bool):
+            return 1 if value else 0  
+        elif target_type == 'venus' and isinstance(value, bool):
+            return "1" if value else "0" 
+        elif target_type == 'mars' and isinstance(value, str):
+            if value.lower() == "true" or value == "1":
+                return True  
+            elif value.lower() == "false" or value == "0":
+                return False  
+            else:
+                raise TypeError(f"Cannot cast string '{value}' to mars (bool)")
+        elif target_type == 'mars' and isinstance(value, int):
+            return value == 1 
         else:
             raise TypeError(f"Unsupported cast from {type(value).__name__} to {target_type}")
-        
+
     def get_type_from_value(self, value):
         """ Retorna el tipo basado en el valor """
         if isinstance(value, int):
@@ -267,7 +279,7 @@ class Interpretar:
         return value
 
     def check_type_variable(self, value, expected_type):
-        """Verifica si el valor es del tipo esperado."""
+        """Verifica si el valor es del tipo esperado y realiza cast automático entre enteros y booleanos."""
         type_map = {
             'earth': int,
             'mercury': float,
@@ -275,12 +287,18 @@ class Interpretar:
             'venus': str,
             'mars': bool,
         }
-        expected_type = expected_type.lower()  
+        expected_type = expected_type.lower()
+        
+        if expected_type == 'mars' and isinstance(value, int):
+            value = (value == 1)
+        elif expected_type == 'earth' and isinstance(value, bool):
+            value = 1 if value else 0
+
         if expected_type in type_map:
             if not isinstance(value, type_map[expected_type]):
                 raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
-        else:
-            raise TypeError(f"Unknown type '{expected_type}' for validation.")
+        
+        return value
 
     def check_type(self, value, expected_type):
         """Validar el tipo del valor basado en el tipo esperado."""

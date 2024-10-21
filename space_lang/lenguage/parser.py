@@ -21,17 +21,18 @@ class Parser:
 
         if token[0] == 'PLANET':
             self.pos += 1
-            var_type = self.tokens[self.pos][0]
+            var_type = self.tokens[self.pos][0]  # Captura el tipo de la variable (earth, venus, etc.)
             self.pos += 1
-            var_name = self.tokens[self.pos][1]
+            var_name = self.tokens[self.pos][1]  # Captura el nombre de la variable
             self.pos += 1
             if self.tokens[self.pos][0] == 'ASSIGN':
-                self.pos += 1  
+                self.pos += 1
                 expr = self.parse_expression()
-                self.pos += 1  
+
+                # En lugar de obtener el tipo aquí, solo verificamos si es necesario hacer casting en el intérprete
                 if self.tokens[self.pos][0] == 'END':
-                    self.pos += 1  
-                return ('declare', var_type, var_name, expr)
+                    self.pos += 1
+                return ('assign', var_type, var_name, expr)  # El tipo de la variable se pasa al intérprete para validación
         
         elif token[0] == 'CONSTELLATION':
             self.pos += 1
@@ -284,6 +285,20 @@ class Parser:
 
         else:
             raise SyntaxError(f'Unexpected token: {token} at position {self.pos}')
+        
+    def is_casting_required(self, var_type, expr):
+        """ Verifica si es necesario realizar un cast de tipo """
+        expr_type = self.get_expression_type(expr)
+        return var_type != expr_type  # Si los tipos no coinciden, requiere casting
+
+    def get_expression_type(self, expr):
+        """ Obtiene el tipo de una expresión """
+        if expr[0] == 'num':
+            return 'earth'
+        elif expr[0] == 'string':
+            return 'venus'
+        # Agrega más casos según los tipos que manejes
+        return None
 
     def parse_block(self, end_token):
         block = []

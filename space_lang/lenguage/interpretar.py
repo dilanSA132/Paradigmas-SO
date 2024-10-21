@@ -16,11 +16,15 @@ class Interpretar:
     def execute_statement(self, statement):
         stmt_type = statement[0]
 
-        if stmt_type == 'declare':
+        if stmt_type == 'declare' or stmt_type == 'assign':
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
-            self.check_type_variable(value, var_type)
-            self.variables[var_name] = value
+
+            if var_type.lower() != self.get_type_from_value(value).lower():
+                value = self.cast_value(value, var_type.lower())
+
+            self.check_type_variable(value, var_type.lower()) 
+            self.variables[var_name] = value  
             return value
 
         elif stmt_type == 'declare_vector':
@@ -155,9 +159,9 @@ class Interpretar:
             return_value = self.evaluate_expression(statement[1])
             self.debug_print(f"Returning value {return_value}")
             return return_value  
-        
+    
     def call_function(self, function_name, args):
-        if function_name in self.variables: 
+        if function_name in self.variables:
             raise TypeError(f"'{function_name}' is not a function, but a variable.")
 
         if function_name not in self.functions:
@@ -174,7 +178,12 @@ class Interpretar:
         for param, arg in zip(parameters, args):
             param_type, param_subtype, param_name = param
             arg_value = self.evaluate_expression(arg)
-            self.check_type(arg_value, param_subtype)
+
+            # Verificar si el argumento necesita un cast
+            if param_subtype.lower() != self.get_type_from_value(arg_value).lower():
+                arg_value = self.cast_value(arg_value, param_subtype.lower())
+
+            self.check_type(arg_value, param_subtype.lower())
             local_vars[param_name] = arg_value
 
         previous_vars = self.variables.copy()
@@ -183,9 +192,19 @@ class Interpretar:
         self.variables = previous_vars  
         if return_value is None:
             raise ValueError(f"Function {function_name} did not return a value.")
-        
+
         self.check_type(return_value, function_info['return_type'])
         return return_value
+
+    def check_type(self, value, expected_type):
+        """Valida que el valor tenga el tipo esperado."""
+        if expected_type.lower() != self.get_type_from_value(value).lower():
+            raise TypeError(f"Expected {expected_type}, but got {self.get_type_from_value(value)}.")
+
+    def check_type(self, value, expected_type):
+        """Valida que el valor tenga el tipo esperado."""
+        if expected_type != self.get_type_from_value(value):
+            raise TypeError(f"Expected {expected_type}, but got {self.get_type_from_value(value)}.")
 
     def get_variable_type(self, var_name):
         """Determina el tipo de la variable basada en el prefijo del tipo (earth, mercury, venus, etc.)."""
@@ -193,6 +212,44 @@ class Interpretar:
             if f"{var_type} {var_name}" in self.variables:
                 return var_type
         return None
+    
+    def is_casting_required(self, expected_type, value):
+        """ Verifica si el tipo del valor difiere del tipo esperado, lo que requiere un casting """
+        type_map = {
+            'earth': int,
+            'mercury': float,
+            'jupiter': float,
+            'venus': str,
+            'mars': bool,
+        }
+        return not isinstance(value, type_map.get(expected_type, type(value)))
+    
+    def cast_value(self, value, target_type):
+        """ Realiza el cast de un valor a otro tipo """
+        if target_type == 'venus' and isinstance(value, int):
+            return str(value)  # Convierte de int (earth) a string (venus)
+        elif target_type == 'earth' and isinstance(value, str):
+            try:
+                return int(value)  # Convierte de string (venus) a int (earth)
+            except ValueError:
+                raise TypeError(f"Cannot cast string '{value}' to earth (int)")
+        elif target_type == 'mercury' and isinstance(value, int):
+            return float(value)  # Convierte de int a float (mercury)
+        else:
+            raise TypeError(f"Unsupported cast from {type(value).__name__} to {target_type}")
+        
+    def get_type_from_value(self, value):
+        """ Retorna el tipo basado en el valor """
+        if isinstance(value, int):
+            return 'earth'
+        elif isinstance(value, float):
+            return 'mercury'
+        elif isinstance(value, str):
+            return 'venus'
+        elif isinstance(value, bool):
+            return 'mars'
+        else:
+            raise TypeError(f"Unknown type for value '{value}'")
 
     def convert_value(self, value, var_type):
         """Convierte el valor de entrada según el tipo de la variable."""
@@ -212,24 +269,19 @@ class Interpretar:
     def check_type_variable(self, value, expected_type):
         """Verifica si el valor es del tipo esperado."""
         type_map = {
-            'EARTH': int,
-            'MERCURY': float,
-            'JUPITER': float,
-            'VENUS': str,
+            'earth': int,
+            'mercury': float,
+            'jupiter': float,
+            'venus': str,
+            'mars': bool,
         }
+        expected_type = expected_type.lower()  
         if expected_type in type_map:
             if not isinstance(value, type_map[expected_type]):
                 raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
-        elif expected_type == 'MARS':
-            if value is None:
-                raise TypeError("Expected a boolean, but got None.")
-            elif isinstance(value, str) and value.lower() in ['true', 'false']:
-                value = True if value.lower() == 'true' else False
-            elif not isinstance(value, bool):
-                raise TypeError(f"Expected a boolean (true/false), but got {type(value).__name__}.")
         else:
             raise TypeError(f"Unknown type '{expected_type}' for validation.")
-        
+
     def check_type(self, value, expected_type):
         """Validar el tipo del valor basado en el tipo esperado."""
         type_map = {
@@ -242,7 +294,6 @@ class Interpretar:
         if expected_type in type_map and not isinstance(value, type_map[expected_type]):
             raise TypeError(f"Expected {type_map[expected_type].__name__}, but got {type(value).__name__}.")
 
-     # Funciones para el manejo de Astro (pila)
     def astro_append(self, list_name, element):
         if list_name not in self.variables:
             raise NameError(f"Astro '{list_name}' is not defined.")

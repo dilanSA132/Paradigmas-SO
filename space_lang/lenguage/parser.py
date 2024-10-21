@@ -19,7 +19,6 @@ class Parser:
             self.pos += 1
             return None
 
-        # Manejo de la declaración de variables 'PLANET'
         if token[0] == 'PLANET':
             self.pos += 1
             var_type = self.tokens[self.pos][0]
@@ -45,17 +44,16 @@ class Parser:
                 self.pos += 1  
             return ('declare_vector', var_name, expr_list)
         
-        # Manejo de la declaración de un vector 'Stellar'
         elif token[0] == 'STELLAR':
-            self.pos += 1  # Saltar la palabra clave 'Stellar'
-            var_name = self.tokens[self.pos][1]  # Obtener el nombre del vector
-            self.pos += 1  # Saltar el nombre del vector
-            if self.tokens[self.pos][0] == 'ASSIGN':  # Verificar el operador de asignación '='
-                self.pos += 1  # Saltar el signo '='
-                expr_list = self.parse_list()  # Parsear la lista de elementos entre []
-                self.pos += 1  # Saltar el punto final '.'
+            self.pos += 1  
+            var_name = self.tokens[self.pos][1]  
+            self.pos += 1  
+            if self.tokens[self.pos][0] == 'ASSIGN': 
+                self.pos += 1 
+                expr_list = self.parse_list()  
+                self.pos += 1 
                 return ('declare_vector', var_name, expr_list)
-            # Manejo de la declaración de un vector 'Stellar'
+
         elif token[0] == 'ASTRO':
             self.pos += 1  
             var_name = self.tokens[self.pos][1]  
@@ -159,7 +157,6 @@ class Parser:
                 self.pos += 1
             return ('nebula_cosmicflow', queue_name)
         
-        # Manejo de la función 'stellar_add'
         elif token[0] == 'STELLAR_ADD':
             self.pos += 1
             vector_name = self.tokens[self.pos][1]
@@ -169,7 +166,6 @@ class Parser:
                 self.pos += 1
             return ('stellar_add', vector_name, element)
 
-        # Manejo de la función 'stellar_remove'
         elif token[0] == 'STELLAR_REMOVE':
             self.pos += 1
             vector_name = self.tokens[self.pos][1]
@@ -179,7 +175,6 @@ class Parser:
                 self.pos += 1
             return ('stellar_remove', vector_name, index)
         
-        # Manejo de la función 'stellar_size'
         elif token[0] == 'STELLAR_SIZE':
             self.pos += 1
             vector_name = self.tokens[self.pos][1]
@@ -188,19 +183,17 @@ class Parser:
                 self.pos += 1
             return ('stellar_size', vector_name)
 
-        # Manejo de la función 'stellar_place'
         elif token[0] == 'STELLAR_PLACE':
             self.pos += 1
             vector_name = self.tokens[self.pos][1]
             self.pos += 1
-            index = self.parse_expression()  # Índice
-            element = self.parse_expression()  # Valor a insertar
+            index = self.parse_expression()  
+            element = self.parse_expression()  
             self.pos += 1
             if self.tokens[self.pos][0] == 'END':
                 self.pos += 1
             return ('stellar_place', vector_name, index, element)
 
-        # Manejo de retorno 'STARDUST'
         elif token[0] == 'STARDUST':  
             self.pos += 1  
             expr = self.parse_expression()  
@@ -208,7 +201,6 @@ class Parser:
                 self.pos += 1 
             return ('return', expr)
 
-        # Manejo de funciones 'ANDROMEDA'
         elif token[0] == 'ANDROMEDA': 
             self.pos += 1 
             return_type = self.tokens[self.pos][0]  
@@ -227,7 +219,6 @@ class Parser:
             block = self.parse_block('END_ANDROMEDA')  
             return ('function', return_type, function_name, parameters, block)
 
-        # Manejo del condicional 'STARDOCK'
         elif token[0] == 'STARDOCK':
             self.pos += 1
             condition = self.parse_condition()
@@ -242,7 +233,6 @@ class Parser:
 
             return ('stardock', condition, true_block, false_block)
 
-        # Manejo de impresión 'star'
         elif token[0] == 'ID' and token[1] == 'star':
             self.pos += 1  
             message = self.parse_expression()
@@ -258,7 +248,7 @@ class Parser:
 
         elif token[0] == 'ID' and token[1] == 'starcatch':
             self.pos += 1  
-            if self.tokens[self.pos][0] == 'STRING':  # Verificar si hay un mensaje personalizado
+            if self.tokens[self.pos][0] == 'STRING':
                 message = self.tokens[self.pos][1]
                 self.pos += 1
             else:
@@ -271,7 +261,6 @@ class Parser:
             else:
                 raise SyntaxError(f"Expected end of statement but got {self.tokens[self.pos]}")
 
-        # Manejo del bucle 'ORBIT'
         elif token[0] == 'ORBIT':
             self.pos += 1
             var_name = self.tokens[self.pos][1]
@@ -283,7 +272,6 @@ class Parser:
             block = self.parse_block('END_ORBIT')
             return ('orbit', var_name, start_expr, end_expr, interval_expr, block)
 
-        # Manejo del switch 'PERSEIDS'
         elif token[0] == 'PERSEIDS':
             self.pos += 1
             var_name = self.tokens[self.pos][1]
@@ -346,13 +334,11 @@ class Parser:
             param_type = self.tokens[self.pos][0]
             self.pos += 1
             
-            # Si el tipo es Stellar, no se espera un subtipo
             if param_type == 'STELLAR':
                 param_name = self.tokens[self.pos][1]
                 self.pos += 1
                 parameters.append((param_type, None, param_name))
             
-            # Para otros tipos, sí se espera un subtipo
             elif self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('MERCURY', 'VENUS', 'EARTH', 'MARS', 'JUPITER'):
                 param_subtype = self.tokens[self.pos][0]
                 self.pos += 1
@@ -422,7 +408,7 @@ class Parser:
                 self.pos += 1 
                 return ('call_function', token[1], args) 
             return ('var', token[1])
-        elif token[0] == 'STELLAR_SIZE':  # Añadir esto para manejar 'stellar_size'
+        elif token[0] == 'STELLAR_SIZE':  
             vector_name = self.tokens[self.pos][1]
             self.pos += 1
             return ('stellar_size', vector_name)
@@ -431,7 +417,7 @@ class Parser:
             self.pos += 1
             return ('astro_isvacuum', stack_name)
         
-        elif token[0] == 'ASTRO_COUNT':  # Añadir esto para manejar 'stellar_size'
+        elif token[0] == 'ASTRO_COUNT':
             stack_name = self.tokens[self.pos][1]
             self.pos += 1
             return ('astro_count', stack_name)
@@ -462,11 +448,11 @@ class Parser:
 
     def parse_list(self):
         elements = []
-        if self.tokens[self.pos][0] == 'LPAREN':  # Verificar que inicia una lista con '['
-            self.pos += 1  # Saltar el paréntesis izquierdo '['
-        while self.tokens[self.pos][0] != 'RPAREN':  # Mientras no se encuentre el cierre ']'
-            elements.append(self.parse_expression())  # Agregar los elementos a la lista
-            if self.tokens[self.pos][0] == 'COMMA':  # Saltar las comas
+        if self.tokens[self.pos][0] == 'LPAREN': 
+            self.pos += 1 
+        while self.tokens[self.pos][0] != 'RPAREN':  
+            elements.append(self.parse_expression())  
+            if self.tokens[self.pos][0] == 'COMMA':  
                 self.pos += 1
-        self.pos += 1  # Saltar el paréntesis derecho ']'
+        self.pos += 1  
         return elements

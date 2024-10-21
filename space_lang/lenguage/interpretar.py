@@ -28,30 +28,30 @@ class Interpretar:
             value_list = [self.evaluate_expression(expr) for expr in expr_list]
             self.variables[var_name] = value_list
             return value_list
-        #Operación push de Astro 
+
         elif stmt_type == 'astro_launch':
             _, list_name, element = statement
             element_value = self.evaluate_expression(element)
             self.astro_append(list_name, element_value)
             return
-        # Operación pop de Astro 
+
         elif stmt_type == 'astro_reentry':
             _, list_name = statement
-            #index_value = self.evaluate_expression(index)
+
             self.astro_delete_top(list_name)
             return 
-        # Operación top de Astro 
+
         elif stmt_type == 'astro_orbittop':
             _, list_name = statement
             top = self.astro_top(list_name)
             self.debug_print(f"Value top of '{list_name}': {top}")
             self.results.append(f"Value top of '{list_name}': {top}")
             return top
-        #Operación si esta vacío de Astro 
+
         elif stmt_type == 'astro_isvacuum':
             _, list_name = statement
             return self.astro_is_vacuum(list_name)
-        # Operación para agregar un elemento a un vector
+
         elif stmt_type == 'astro_count':
             _, list_name = statement
             size = self.astro_length(list_name)
@@ -77,12 +77,11 @@ class Interpretar:
             self.debug_print(f"Value front of '{list_name}': {front}")
             self.results.append(f"Value front of '{list_name}': {front}")
             return front
-        #Operación si esta vacío de Astro 
+        
         elif stmt_type == 'nebula_isvacuum':
             _, list_name = statement
             return self.astro_is_vacuum(list_name)
-        # Operación para agregar un elemento a un vector
-                # Operación para obtener el tamaño de un vector
+
         elif stmt_type == 'nebula_cosmicflow':
             _, list_name = statement
             size = self.nebula_length(list_name)
@@ -95,14 +94,13 @@ class Interpretar:
             element_value = self.evaluate_expression(element)
             self.stellar_append(vector_name, element_value)
             return
-        # Operación para remover un elemento de un vector por índice
+
         elif stmt_type == 'stellar_remove':
             _, vector_name, index = statement
             index_value = self.evaluate_expression(index)
             self.stellar_delete_by_index(vector_name, index_value)
             return
 
-        # Operación para obtener el tamaño de un vector
         elif stmt_type == 'stellar_size':
             _, vector_name = statement
             size = self.stellar_length(vector_name)
@@ -110,7 +108,6 @@ class Interpretar:
             self.results.append(f"Size of '{vector_name}': {size}")
             return size
 
-        # Operación para insertar un elemento en un índice específico de un vector
         elif stmt_type == 'stellar_place':
             _, vector_name, index, element = statement
             index_value = self.evaluate_expression(index)
@@ -160,7 +157,7 @@ class Interpretar:
             return return_value  
         
     def call_function(self, function_name, args):
-        if function_name in self.variables:  # Si es un vector o una variable, no debe ser tratado como función
+        if function_name in self.variables: 
             raise TypeError(f"'{function_name}' is not a function, but a variable.")
 
         if function_name not in self.functions:
@@ -261,10 +258,9 @@ class Interpretar:
     def astro_top(self, list_name):
         if list_name not in self.variables:
             raise NameError(f"Astro '{list_name}' is not defined.")
-        if not self.variables[list_name]:  # Verifica si la lista está vacía
+        if not self.variables[list_name]: 
             raise IndexError(f"Astro '{list_name}' is empty.")
-        return self.variables[list_name][-1]  # Retorna el último elemento
-
+        return self.variables[list_name][-1] 
 
     def astro_is_vacuum(self, list_name):
         if list_name not in self.variables:
@@ -277,7 +273,6 @@ class Interpretar:
             raise NameError(f"Astro '{list_name}' is not defined.")
         return len(self.variables[list_name])
 
-     # Funciones para el manejo de Nebula (queue)
     def nebula_append(self, list_name, element):
         if list_name not in self.variables:
             raise NameError(f"Nebula '{list_name}' is not defined.")
@@ -293,9 +288,9 @@ class Interpretar:
     def nebula_front(self, list_name):
         if list_name not in self.variables:
             raise NameError(f"Nebula '{list_name}' is not defined.")
-        if not self.variables[list_name]:  # Verifica si la lista está vacía
+        if not self.variables[list_name]:  
             raise IndexError(f"Nebula '{list_name}' is empty.")
-        return self.variables[list_name][0]  # Retorna el primer elemento
+        return self.variables[list_name][0] 
     
     def nebula_is_vacuum(self, list_name):
         if list_name not in self.variables:
@@ -308,7 +303,6 @@ class Interpretar:
             raise NameError(f"Nebula '{list_name}' is not defined.")
         return len(self.variables[list_name])
     
-    # Funciones para el manejo de Stellar (vector)
     def stellar_append(self, vector_name, element):
         if vector_name not in self.variables:
             raise NameError(f"Vector '{vector_name}' is not defined.")
@@ -417,41 +411,36 @@ class Interpretar:
                 raise NameError(f"Variable '{var_name}' is not defined.")
             return self.variables[var_name]
         elif expr_type == 'astro_isvacuum':
-            # Evalúa el argumento de la función, que debe ser el nombre de la lista
             list_name = expr[1]
             if self.astro_is_vacuum(list_name):
                 return "True"
             return "False"
         elif expr_type == 'nebula_isvacuum':
-            # Evalúa el argumento de la función, que debe ser el nombre de la lista
             list_name = expr[1]
             if self.nebula_is_vacuum(list_name):
                 return "True"
             return "False"
         elif expr_type == 'nebula_cosmicflow':
-            # Evalúa el argumento de la función, que debe ser el nombre de la lista
             list_name = expr[1]
             return self.nebula_length(list_name)
         elif expr_type == 'astro_count':
-            # Evalúa el argumento de la función, que debe ser el nombre de la lista
             list_name = expr[1]
             return self.astro_length(list_name)
         
         elif expr_type == 'call_function':
             function_name = expr[1]
             args = expr[2]
-            if function_name in self.variables:  # Si es una variable como un vector
+            if function_name in self.variables:  
                 vector = self.variables[function_name]
                 index = self.evaluate_expression(args[0])
                 if not isinstance(index, int) or index < 0 or index >= len(vector):
                     raise IndexError(f"Index {index} out of bounds for vector {function_name}.")
-                return vector[index]  # Acceso al vector por índice
+                return vector[index] 
             return self.call_function(function_name, args)
 
         left = self.evaluate_expression(expr[1])
         right = self.evaluate_expression(expr[2])
 
-        # Operaciones aritméticas y booleanas
         if expr_type == 'plus':
             return left + right
         elif expr_type == 'minus':

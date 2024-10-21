@@ -21,18 +21,17 @@ class Parser:
 
         if token[0] == 'PLANET':
             self.pos += 1
-            var_type = self.tokens[self.pos][0]  # Captura el tipo de la variable (earth, venus, etc.)
+            var_type = self.tokens[self.pos][0]  
             self.pos += 1
-            var_name = self.tokens[self.pos][1]  # Captura el nombre de la variable
+            var_name = self.tokens[self.pos][1]  
             self.pos += 1
             if self.tokens[self.pos][0] == 'ASSIGN':
                 self.pos += 1
                 expr = self.parse_expression()
 
-                # En lugar de obtener el tipo aquí, solo verificamos si es necesario hacer casting en el intérprete
                 if self.tokens[self.pos][0] == 'END':
                     self.pos += 1
-                return ('assign', var_type, var_name, expr)  # El tipo de la variable se pasa al intérprete para validación
+                return ('assign', var_type, var_name, expr) 
         
         elif token[0] == 'CONSTELLATION':
             self.pos += 1
@@ -215,7 +214,7 @@ class Parser:
             if self.tokens[self.pos][0] != 'COLON':
                 raise SyntaxError(f"Expected ':', but got {self.tokens[self.pos]} at position {self.pos}")
             
-            self.pos += 1  
+            self.pos += 1 
 
             block = self.parse_block('END_ANDROMEDA')  
             return ('function', return_type, function_name, parameters, block)
@@ -289,7 +288,7 @@ class Parser:
     def is_casting_required(self, var_type, expr):
         """ Verifica si es necesario realizar un cast de tipo """
         expr_type = self.get_expression_type(expr)
-        return var_type != expr_type  # Si los tipos no coinciden, requiere casting
+        return var_type != expr_type 
 
     def get_expression_type(self, expr):
         """ Obtiene el tipo de una expresión """
@@ -297,7 +296,6 @@ class Parser:
             return 'earth'
         elif expr[0] == 'string':
             return 'venus'
-        # Agrega más casos según los tipos que manejes
         return None
 
     def parse_block(self, end_token):

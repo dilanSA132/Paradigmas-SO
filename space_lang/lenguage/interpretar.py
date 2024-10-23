@@ -158,6 +158,64 @@ class Interpretar:
             self.debug_print(f"Returning value {return_value}")
             return return_value  
     
+        elif stmt_type == 'void_function': 
+            _, function_name, parameters, block = statement
+            self.functions[function_name] = {
+                'return_type': 'void',
+                'parameters': parameters,
+                'block': block
+            }
+            self.debug_print(f"Void function {function_name} defined")
+
+        elif stmt_type == 'call_void_function':  
+            function_name = statement[1]
+            args = statement[2]
+            self.call_void_function(function_name, args)
+            return None  
+        
+
+    def call_void_function(self, function_name, args):
+        """Llama a una función void y ejecuta su bloque de código."""
+        if function_name not in self.functions:
+            raise NameError(f"Void function '{function_name}' is not defined.")
+        
+        function_info = self.functions[function_name]
+        if function_info['return_type'] != 'void':
+            raise TypeError(f"Function '{function_name}' is not a void function.")
+
+        parameters = function_info['parameters']
+        block = function_info['block']
+
+        if len(parameters) != len(args):
+            raise TypeError(f"Void function '{function_name}' expected {len(parameters)} arguments, but got {len(args)}")
+
+        local_vars = {}
+        for param, arg in zip(parameters, args):
+            param_type, param_subtype, param_name = param
+            arg_value = self.evaluate_expression(arg)
+
+            if param_subtype.lower() != self.get_type_from_value(arg_value).lower():
+                arg_value = self.cast_value(arg_value, param_subtype.lower())
+
+            local_vars[param_name] = arg_value
+
+        previous_vars = self.variables.copy()
+        self.variables.update(local_vars)
+
+        self.execute_block(block)
+
+        self.variables = previous_vars
+        self.debug_print(f"Void function '{function_name}' executed successfully.")
+    
+    def define_void_function(self, function_name, parameters, block):
+        """Guarda una función void en el diccionario de funciones."""
+        self.functions[function_name] = {
+            'return_type': 'void',
+            'parameters': parameters,
+            'block': block
+        }
+        self.debug_print(f"Void function '{function_name}' defined with parameters {parameters}")
+
     def call_function(self, function_name, args):
         if function_name in self.variables:
             raise TypeError(f"'{function_name}' is not a function, but a variable.")
@@ -220,11 +278,12 @@ class Interpretar:
             'mars': bool,
         }
         return not isinstance(value, type_map.get(expected_type, type(value)))
-            
+                
     def cast_value(self, value, target_type):
-        """ Realiza el cast de un valor a otro tipo """
+        """Realiza el cast de un valor a otro tipo"""
         if target_type == 'venus' and isinstance(value, int):
-            return str(value) 
+            return str(value)
+        
         elif target_type == 'earth' and isinstance(value, str):
             if value.lower() == "true":
                 return 1 
@@ -234,19 +293,32 @@ class Interpretar:
                 return int(value)  
             except ValueError:
                 raise TypeError(f"Cannot cast string '{value}' to earth (int)")
+        
         elif target_type == 'earth' and isinstance(value, bool):
-            return 1 if value else 0  
+            return 1 if value else 0
+
         elif target_type == 'venus' and isinstance(value, bool):
-            return "1" if value else "0" 
+            return "1" if value else "0"
+        
         elif target_type == 'mars' and isinstance(value, str):
             if value.lower() == "true" or value == "1":
-                return True  
+                return True
             elif value.lower() == "false" or value == "0":
-                return False  
+                return False
             else:
                 raise TypeError(f"Cannot cast string '{value}' to mars (bool)")
+        
         elif target_type == 'mars' and isinstance(value, int):
-            return value == 1 
+            return value == 1
+        
+        elif target_type == 'mercury': 
+            if isinstance(value, (int, float)):
+                return float(value)  
+        
+        elif target_type == 'jupiter':  
+            if isinstance(value, (int, float)):
+                return float(value)  
+        
         else:
             raise TypeError(f"Unsupported cast from {type(value).__name__} to {target_type}")
 
@@ -260,6 +332,9 @@ class Interpretar:
             return 'venus'
         elif isinstance(value, bool):
             return 'mars'
+        elif value is None: 
+            return 'void' 
+    
         else:
             raise TypeError(f"Unknown type for value '{value}'")
 
@@ -495,7 +570,12 @@ class Interpretar:
         elif expr_type == 'astro_count':
             list_name = expr[1]
             return self.astro_length(list_name)
-        
+        elif expr_type == 'call_void_function':
+            function_name = expr[1]
+            args = expr[2]
+            self.call_void_function(function_name, args)
+            return None 
+
         elif expr_type == 'call_function':
             function_name = expr[1]
             args = expr[2]

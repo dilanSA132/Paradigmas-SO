@@ -136,3 +136,60 @@ class Structs:
         star "El resultado es" sumasdf.
 """
         self.code_input.insert(tk.INSERT, code)
+        
+    def insert_constellation_and_loop(self):
+        code = """Constellation myVector = [0, 20, 23, 4, 51, 6].
+
+    moon display_info [planet venus message]:
+        orbit j 0 5 2.
+            star "Elemento del vector" myVector[j].
+        endOrbit.
+        star message.
+    endMoon
+    """
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_moon_function(self):
+        code = """moon display_info [planet venus message]:
+        star message.
+    endMoon
+    """
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_int_function(self):
+        code = """andromeda earth suma[planet earth x, planet earth y]:
+        planet earth result = x + y.
+        stardust result.
+    endAndromeda
+    """
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_string_function(self):
+        code = """andromeda venus suma[planet venus x, planet venus y]:
+        planet venus result = x + y.
+        stardust result.
+    endAndromeda
+    """
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_bool_function(self):
+        code = """andromeda mars suma[planet mars x, planet venus y]:
+        planet mars result = 1.
+        stardust result.
+    endAndromeda
+    """
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_float_function(self):
+        code = """andromeda mercury suma[planet mercury x]:
+        stardust x + 1.45.
+    endAndromeda
+    """
+        self.code_input.insert(tk.INSERT, code)
+
+    def insert_double_function(self):
+        code = """andromeda jupiter suma[planet jupiter x]:
+        stardust x + 1.45.
+    endAndromeda
+    """
+        self.code_input.insert(tk.INSERT, code)

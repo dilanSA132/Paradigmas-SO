@@ -21,7 +21,7 @@ class CodeExecutorUI:
             "endAndromeda", "stardock", "endStardock", "stardust", "stardock",
             "stellar_add", "stellar_remove", "stellar_size", "stellar_place","Constellation",
             "Astro","astro_launch","astro_reentry","astro_orbittop","astro_isvacuum","astro_count",
-            "Nebula","nebula_eventHorizon","nebula_lightSpeed","nebula_core","nebula_isVacuum","nebula_cosmicFlow"
+            "Nebula","nebula_eventHorizon","nebula_lightSpeed","nebula_core","nebula_isVacuum","nebula_cosmicFlow,sun,moon,endMoon,moon, and"      
         ]
 
         self.setup_ui()
@@ -138,7 +138,16 @@ class CodeExecutorUI:
         insert_menu.add_command(label="Método front de cola", command=self.structs.insert_nebula_front)
         insert_menu.add_command(label="Método es vacio de cola", command=self.structs.insert_nebula_empty)
         insert_menu.add_command(label="Obtener tamaño de la cola", command=self.structs.insert_nebula_size)
-        
+
+        insert_menu.add_command(label="Declarar Constellation y bucle", command=self.structs.insert_constellation_and_loop)
+        insert_menu.add_command(label="Función moon (void)", command=self.structs.insert_moon_function)
+        insert_menu.add_command(label="Función suma de enteros", command=self.structs.insert_int_function)
+        insert_menu.add_command(label="Función suma de cadenas", command=self.structs.insert_string_function)
+        insert_menu.add_command(label="Función suma de booleanos", command=self.structs.insert_bool_function)
+        insert_menu.add_command(label="Función suma de flotantes", command=self.structs.insert_float_function)
+        insert_menu.add_command(label="Función suma de dobles", command=self.structs.insert_double_function)
+
+                
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)
         self.root.config(menu=menu_bar)
 

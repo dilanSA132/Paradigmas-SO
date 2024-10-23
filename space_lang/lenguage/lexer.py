@@ -9,6 +9,9 @@ class Lexer:
             ('ANDROMEDA', r'andromeda'),  # Nueva palabra reservada para funciones
             ('STARDUST', r'stardust'),  # Nueva palabra reservada para retornar valores
             ('END_ANDROMEDA', r'endAndromeda'),  # Fin de funciones
+            ('MOON', r'moon'),  # Nueva palabra reservada para funciones tipo void
+            ('END_MOON', r'endMoon'),  # Fin de funciones void
+            ('SUN', r'sun'),  # Nueva palabra reservada para ejecutar funciones void
             ('AND', r'and'),  # Operador lógico and
             
             ('PLANET', r'planet'),  # Declaración de tipos
@@ -21,20 +24,19 @@ class Lexer:
             ('STELLAR', r'Stellar'),  # Otros identificadores
             ('ASTRO',r'Astro'), # Pila
             ('NEBULA',r'Nebula'),
-            # Nuevos tokens para operaciones en Astro (pilas)
+
             ('ASTRO_LAUNCH', r'astro_launch'),  # Añadir elemento
             ('ASTRO_REENTRY', r'astro_reentry'),  # Eliminar 
             ('ASTRO_ORBITTOP', r'astro_orbitTop'),  # Obtener el número tope
             ('ASTRO_ISVACUUM', r'astro_isVacuum'),  # Verificar si esta vacia
             ('ASTRO_COUNT', r'astro_count'),
-            # Nuevos tokens para operaciones en Nebula (colas)
+
             ('NEBULA_EVENTHORIZON', r'nebula_eventHorizon'),  # Añadir elemento
             ('NEBULA_LIGHTSPEED', r'nebula_lightSpeed'),  # Eliminar 
             ('NEBULA_CORE', r'nebula_core'),  # Obtener el número tope
             ('NEBULA_ISVACUUM', r'nebula_isVacuum'),  # Verificar si esta vacia
             ('NEBULA_COSMICFLOW',r'nebula_cosmicFlow'),
             
-            # Nuevos tokens para operaciones en Stellar
             ('STELLAR_ADD', r'stellar_add'),  # Añadir elemento
             ('STELLAR_REMOVE', r'stellar_remove'),  # Eliminar por índice
             ('STELLAR_SIZE', r'stellar_size'),  # Obtener tamaño

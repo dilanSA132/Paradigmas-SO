@@ -38,7 +38,6 @@ class CodeExecutor:
         dialog.geometry("400x150")
         dialog.grab_set()  # Hacer que el diálogo sea modal
 
-        # Centrar la ventana en la pantalla
         dialog.update_idletasks()
         width = dialog.winfo_width()
         height = dialog.winfo_height()
@@ -47,10 +46,10 @@ class CodeExecutor:
         dialog.geometry(f"{width}x{height}+{x}+{y}")
 
         label = tk.Label(dialog, text=prompt, bg="#1e1e1e", fg="#dcdcdc", font=("Consolas", 12))
-        label.pack(pady=10, anchor="center")  # Centrar el label
+        label.pack(pady=10, anchor="center")  
 
         entry = tk.Entry(dialog, bg="#2d2d30", fg="#dcdcdc", insertbackground="white", font=("Consolas", 12))
-        entry.pack(pady=10, anchor="center")  # Centrar el campo de texto
+        entry.pack(pady=10, anchor="center") 
         entry.focus_set()
 
         result = {"value": None}
@@ -63,7 +62,7 @@ class CodeExecutor:
         submit_button.pack(pady=10, anchor="center")  # Centrar el botón
 
         dialog.bind("<Return>", lambda event: on_submit())
-        dialog.wait_window()  # Esperar a que el cuadro de diálogo se cierre
+        dialog.wait_window()  
 
         return result["value"]
 

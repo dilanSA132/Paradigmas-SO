@@ -281,10 +281,50 @@ class Parser:
             self.pos += 1
             cases, default_case = self.parse_cases()
             return ('perseids', var_name, cases, default_case)
+        
+        elif token[0] == 'MOON': 
+            self.pos += 1
+            function_name = self.tokens[self.pos][1] 
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'LPAREN': 
+                self.pos += 1
+                parameters = self.parse_parameters()  
+                if self.tokens[self.pos][0] != 'RPAREN': 
+                    raise SyntaxError(f"Expected ']', but got {self.tokens[self.pos]} at position {self.pos}")
+                self.pos += 1 
+            else:
+                parameters = [] 
+
+            if self.tokens[self.pos][0] != 'COLON':  
+                raise SyntaxError(f"Expected ':', but got {self.tokens[self.pos]} at position {self.pos}")
+            self.pos += 1  
+
+            block = self.parse_block('END_MOON')  
+            return ('void_function', function_name, parameters, block)
+
+        elif token[0] == 'SUN':  
+            self.pos += 1
+            function_name = self.tokens[self.pos][1] 
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'LPAREN': 
+                self.pos += 1
+                args = self.parse_arguments() 
+                if self.tokens[self.pos][0] != 'RPAREN': 
+                    raise SyntaxError(f"Expected ']', but got {self.tokens[self.pos]} at position {self.pos}")
+                self.pos += 1  
+            else:
+                args = []  
+
+            if self.tokens[self.pos][0] == 'END': 
+                self.pos += 1  
+            else:
+                raise SyntaxError(f"Expected '.', but got {self.tokens[self.pos]} at position {self.pos}")
+
+            return ('call_void_function', function_name, args)
 
         else:
             raise SyntaxError(f'Unexpected token: {token} at position {self.pos}')
-        
+                        
     def is_casting_required(self, var_type, expr):
         """ Verifica si es necesario realizar un cast de tipo """
         expr_type = self.get_expression_type(expr)
@@ -297,19 +337,16 @@ class Parser:
         elif expr[0] == 'string':
             return 'venus'
         return None
-
+    
     def parse_block(self, end_token):
+        """Procesa un bloque de código que termina con un token específico"""
         block = []
         while self.pos < len(self.tokens) and self.tokens[self.pos][0] != end_token:
             statement = self.parse_statement()
             if statement:
                 block.append(statement)
         if self.pos < len(self.tokens) and self.tokens[self.pos][0] == end_token:
-            self.pos += 1 
-            if self.pos < len(self.tokens) and self.tokens[self.pos][0] == 'END':
-                self.pos += 1 
-        else:
-            raise SyntaxError(f"Expected {end_token}, but got {self.tokens[self.pos]} at position {self.pos}")
+            self.pos += 1  # Salta el token de finalización (endMoon o endAndromeda)
         return block
 
     def parse_cases(self):
@@ -453,10 +490,10 @@ class Parser:
 
     def parse_arguments(self):
         args = []
-        while self.tokens[self.pos][0] != 'RPAREN':
+        while self.tokens[self.pos][0] != 'RPAREN': 
             args.append(self.parse_expression())
-            if self.tokens[self.pos][0] == 'COMMA':
-                self.pos += 1 
+            if self.tokens[self.pos][0] == 'COMMA':  
+                self.pos += 1  
         return args
 
     def parse_list(self):

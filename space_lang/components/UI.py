@@ -29,6 +29,7 @@ class CodeExecutorUI:
 
         self.autocomplete = Autocomplete(self.root, self.code_input, self.keywords)
         self.code_input.bind("<KeyRelease>", self.on_key_release)
+        self.code_input.bind("<KeyRelease-Return>", self.update_line_numbers) 
 
     def setup_ui(self):
         style = ttk.Style()
@@ -48,9 +49,19 @@ class CodeExecutorUI:
         editor_label = tk.Label(code_frame, text="Editor de Código", bg="#282828", fg="#FFD700", font=("Helvetica", 10, "bold"))
         editor_label.pack(anchor="w", padx=5)
 
+        self.line_numbers = tk.Text(code_frame, width=4, bg="#2d2d30", fg="#dcdcdc", state=tk.DISABLED, font=("Consolas", 12))
+        self.line_numbers.pack(side=tk.LEFT, fill=tk.Y)
+
         self.code_input = scrolledtext.ScrolledText(code_frame, wrap=tk.WORD, bg="#2d2d30", fg="#dcdcdc", insertbackground="white", font=("Consolas", 12))
         self.code_input.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
+
+        self.code_input.config(yscrollcommand=self.sync_scroll)
+        self.line_numbers.config(yscrollcommand=self.sync_scroll)
+
+        # Agregar binding para el scroll del ratón
+        self.code_input.bind("<MouseWheel>", self.on_mouse_wheel)
+        self.line_numbers.bind("<MouseWheel>", self.on_mouse_wheel)
         self.code_input.tag_configure("keyword", foreground="#569cd6")
         self.code_input.tag_configure("number", foreground="#b5cea8")
         self.code_input.tag_configure("string", foreground="#ce9178")
@@ -61,7 +72,7 @@ class CodeExecutorUI:
         self.code_input.tag_configure("double", foreground="#dcdcaa")   
         self.code_input.tag_configure("string_var", foreground="#ce9178")  
         self.code_input.tag_configure("bool", foreground="#569cd6")    
-
+        self.update_line_numbers()
         right_panel = tk.Frame(main_frame, bg="#282828", bd=1, relief=tk.SOLID)
         right_panel.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
 
@@ -170,37 +181,51 @@ class CodeExecutorUI:
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
         keywords = r"\b(planet|star|sun|moon|endMoon|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar|stellar_add|stellar_remove|stellar_size|stellar_place|Constellation|Astro|astro_launch|astro_reentry|astro_orbitTop|astro_isVacuum|astro_count|Nebula|nebula_eventHorizon|nebula_lightSpeed|nebula_core|nebula_isVacuum|nebula_cosmicFlow)\b"
-        integers = r"\b\d+\b"  # Resalta números enteros
-        floats = r"\b\d+\.\d+\b"  # Resalta números flotantes
-        booleans = r"\b((?i:true)|(?i:false))\b"  # Resalta valores booleanos true/false insensibles a mayúsculas
-        strings = r'"[^"]*"'  # Resalta cadenas de texto
-        comments = r'#.*'  # Resalta comentarios
-        planets = r"\b(earth|mars|mercury|venus|jupiter)\b"  # Resalta tipos de planetas
+        integers = r"\b\d+\b" 
+        floats = r"\b\d+\.\d+\b" 
+        booleans = r"\b((?i:true)|(?i:false))\b"  
+        strings = r'"[^"]*"'  
+        comments = r'#.*' 
+        planets = r"\b(earth|mars|mercury|venus|jupiter)\b"  
 
-        # Resaltar palabras clave
         for match in re.finditer(keywords, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("keyword", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
-        # Resaltar números enteros
         for match in re.finditer(integers, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("int", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
-        # Resaltar números flotantes
         for match in re.finditer(floats, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("float", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
-        # Resaltar booleanos
         for match in re.finditer(booleans, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("bool", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
-        # Resaltar cadenas de texto
         for match in re.finditer(strings, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("string_var", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
-        # Resaltar comentarios
         for match in re.finditer(comments, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("comment", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
 
-        # Resaltar tipos de planetas (earth, mars, etc.)
         for match in re.finditer(planets, self.code_input.get("1.0", tk.END)):
             self.code_input.tag_add("planet", f"1.0+{match.start()}c", f"1.0+{match.end()}c")
+
+    def update_line_numbers(self, event=None):
+        """Actualizar el widget de números de línea en cada cambio de texto."""
+        self.line_numbers.config(state=tk.NORMAL)
+        self.line_numbers.delete("1.0", tk.END)
+
+        line_count = self.code_input.index(tk.END).split('.')[0]
+        line_numbers_string = "\n".join(str(i) for i in range(1, int(line_count)))
+        
+        self.line_numbers.insert(tk.INSERT, line_numbers_string)
+        self.line_numbers.config(state=tk.DISABLED)
+
+    def sync_scroll(self, *args):
+        """Sincroniza el scroll entre el editor de código y los números de línea."""
+        self.line_numbers.yview_moveto(args[0])
+        self.code_input.yview_moveto(args[0])
+
+    def on_mouse_wheel(self, event):
+        """Permite el scroll usando la rueda del ratón y lo sincroniza."""
+        self.code_input.yview_scroll(int(-1*(event.delta/120)), "units")
+        self.line_numbers.yview_scroll(int(-1*(event.delta/120)), "units")

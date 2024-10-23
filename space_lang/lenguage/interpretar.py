@@ -123,28 +123,21 @@ class Interpretar:
         elif stmt_type == 'starcatch':
             _, message, var_name = statement
             
-            # Obtener el tipo de la variable (por ejemplo, 'mercury' para float)
             var_type = self.get_variable_type(var_name)
             prompt_message = message if message else f"Enter a value for {var_name}: "
             
-            # Capturar el valor de entrada del usuario
             value = self.input_callback(prompt_message)
             
-            # Verificar que se haya recibido un valor válido
             if value is None:
                 raise ValueError(f"Input for {var_name} is invalid.")
             
-            # Convertir el valor al tipo esperado
             value = self.convert_value(value, var_type)
             
-            # Verificar que el valor convertido no sea None
             if value is None:
                 raise ValueError(f"Converted value for {var_name} is invalid.")
             
-            # Asignar el valor a la variable correspondiente
             self.variables[var_name] = value
             
-            # Mensajes de depuración
             self.debug_print(f"Captured input for {var_name} ({var_type}): {value}")
             self.results.append(f"Input captured for {var_name}: {value}")
 
@@ -283,8 +276,8 @@ class Interpretar:
         """Determina el tipo de la variable basada en el nombre."""
         if var_name in self.variables:
             value = self.variables[var_name]
-            return self.get_type_from_value(value)  # Obtener el tipo desde el valor actual de la variable
-        return None  # Si no se encuentra el nombre de la variable
+            return self.get_type_from_value(value) 
+        return None 
 
     
     def is_casting_required(self, expected_type, value):
@@ -360,13 +353,13 @@ class Interpretar:
     def convert_value(self, value, var_type):
         """Convierte el valor de entrada según el tipo de la variable."""
         try:
-            if var_type == 'earth':  # int
+            if var_type == 'earth': 
                 return int(value)
-            elif var_type == 'mercury' or var_type == 'jupiter':  # float
+            elif var_type == 'mercury' or var_type == 'jupiter':
                 return float(value)
-            elif var_type == 'venus':  # string
+            elif var_type == 'venus':  
                 return str(value)
-            elif var_type == 'mars':  # bool
+            elif var_type == 'mars':  
                 return value.lower() == 'true'
         except ValueError:
             raise TypeError(f"Cannot convert value '{value}' to {var_type}.")

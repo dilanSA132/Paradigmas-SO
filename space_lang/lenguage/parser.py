@@ -346,7 +346,8 @@ class Parser:
             if statement:
                 block.append(statement)
         if self.pos < len(self.tokens) and self.tokens[self.pos][0] == end_token:
-            self.pos += 1  # Salta el token de finalización (endMoon o endAndromeda)
+            self.pos +=1
+
         return block
 
     def parse_cases(self):
@@ -444,6 +445,14 @@ class Parser:
     
     def parse_factor(self):
         token = self.tokens[self.pos]
+        if token[0] == 'MINUS':
+            self.pos += 1
+            next_token = self.tokens[self.pos]
+            if next_token[0] == 'NUMBER':
+                self.pos += 1
+                return ('num', -int(next_token[1]))  # Manejar el número negativo
+            else:
+                raise SyntaxError(f"Expected a number after '-', but got {next_token} at position {self.pos}")
         self.pos += 1
         if token[0] == 'NUMBER':
             return ('num', token[1])

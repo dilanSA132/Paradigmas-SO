@@ -16,15 +16,22 @@ class Interpretar:
     def execute_statement(self, statement):
         stmt_type = statement[0]
 
-        if stmt_type == 'declare' or stmt_type == 'assign':
+        if stmt_type == 'assign': 
             _, var_type, var_name, expr = statement
             value = self.evaluate_expression(expr)
 
-            if var_type.lower() != self.get_type_from_value(value).lower():
-                value = self.cast_value(value, var_type.lower())
+            value_type = self.get_type_from_value(value)
+            if var_type != value_type:
+                if expr[0] == 'cast':
+                    value = self.cast_value(value, var_type)  
+                else:
+                    raise TypeError(f"Cannot assign value of type {value_type} to variable of type {var_type} without explicit casting using nextPlanet.")
 
             self.variables[var_name] = value  
+            self.debug_print(f"Variable '{var_name}' assigned with value: {value}")
             return value
+
+
 
         elif stmt_type == 'declare_vector':
             _, var_name, expr_list = statement
@@ -292,47 +299,49 @@ class Interpretar:
         return not isinstance(value, type_map.get(expected_type, type(value)))
                 
     def cast_value(self, value, target_type):
-        """Realiza el cast de un valor a otro tipo"""
-        if target_type == 'venus' and isinstance(value, int):
-            return str(value)
-        
-        elif target_type == 'earth' and isinstance(value, str):
-            if value.lower() == "true":
-                return 1 
-            elif value.lower() == "false":
-                return 0 
-            try:
-                return int(value)  
-            except ValueError:
-                raise TypeError(f"Cannot cast string '{value}' to earth (int)")
-        
-        elif target_type == 'earth' and isinstance(value, bool):
-            return 1 if value else 0
+        """Realiza el cast de un valor a otro tipo explícitamente usando nextPlanet."""
 
-        elif target_type == 'venus' and isinstance(value, bool):
-            return "1" if value else "0"
-        
-        elif target_type == 'mars' and isinstance(value, str):
+        # De string a int (venus a earth)
+        if target_type == 'earth' and isinstance(value, str):  
+            if value.isdigit():
+                return int(value)
+            else:
+                raise TypeError(f"Cannot cast string '{value}' to earth (int)")
+
+        # De int a string (earth a venus)
+        elif target_type == 'venus' and isinstance(value, int):  
+            return str(value)
+
+        # De string a bool (venus a mars)
+        elif target_type == 'mars' and isinstance(value, str):  
             if value.lower() == "true" or value == "1":
                 return True
             elif value.lower() == "false" or value == "0":
                 return False
             else:
                 raise TypeError(f"Cannot cast string '{value}' to mars (bool)")
-        
-        elif target_type == 'mars' and isinstance(value, int):
+
+        # De int a bool (earth a mars)
+        elif target_type == 'mars' and isinstance(value, int):  
             return value == 1
+
+        # De bool a int (mars a earth)
+        elif target_type == 'earth' and isinstance(value, bool):  
+            return 1 if value else 0
+
+        # De int o float a float (earth/jupiter a mercury)
+        elif target_type == 'mercury' and isinstance(value, (int, float)):  
+            return float(value)
         
-        elif target_type == 'mercury': 
-            if isinstance(value, (int, float)):
-                return float(value)  
-        
-        elif target_type == 'jupiter':  
-            if isinstance(value, (int, float)):
-                return float(value)  
-        
-        else:
-            raise TypeError(f"Unsupported cast from {type(value).__name__} to {target_type}")
+        # De string a float (venus a mercury)
+        elif target_type == 'mercury' and isinstance(value, str):  
+            try:
+                return float(value)
+            except ValueError:
+                raise TypeError(f"Cannot cast string '{value}' to mercury (float)")
+
+        # Si el tipo de destino no es soportado o el valor no es del tipo esperado
+        raise TypeError(f"Unsupported cast from {type(value).__name__} to {target_type}")
 
     def get_type_from_value(self, value):
         """ Retorna el tipo basado en el valor """
@@ -552,6 +561,12 @@ class Interpretar:
     def evaluate_expression(self, expr):
         expr_type = expr[0]
 
+        if expr_type == 'cast':  
+            target_type = expr[1] 
+            cast_expr = expr[2]   
+            value = self.evaluate_expression(cast_expr)
+            return self.cast_value(value, target_type)  
+
         if expr_type == 'num':
             return expr[1]
 
@@ -565,7 +580,8 @@ class Interpretar:
             var_name = expr[1]
             if var_name not in self.variables:
                 raise NameError(f"Variable '{var_name}' is not defined.")
-            return self.variables[var_name]
+            return self.variables[var_name] 
+        
         elif expr_type == 'astro_isvacuum':
             list_name = expr[1]
             if self.astro_is_vacuum(list_name):

@@ -193,3 +193,11 @@ class Structs:
     endAndromeda
     """
         self.code_input.insert(tk.INSERT, code)
+
+    def insert_casting_example(self):
+        code = """planet earth intVar = nextPlanet["1"].  # Casteo explícito de string a int
+        planet venus strVar = nextPlanet[intVar].  # Casteo explícito de int a string
+        planet mars boolVar = nextPlanet[strVar].  # Casteo explícito de string a booleano
+        star "Valor casteado" boolVar.
+    """
+        self.code_input.insert(tk.INSERT, code)

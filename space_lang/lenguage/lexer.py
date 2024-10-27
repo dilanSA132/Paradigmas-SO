@@ -6,6 +6,7 @@ class Lexer:
         self.tokens = []
         self.token_specification = [
             ('COMMENT', r'#.*'),  # Comentarios
+            ('NEXTPLANET', r'nextPlanet'),  # Palabra reservada para casteo
             ('ANDROMEDA', r'andromeda'),  # Nueva palabra reservada para funciones
             ('STARDUST', r'stardust'),  # Nueva palabra reservada para retornar valores
             ('END_ANDROMEDA', r'endAndromeda'),  # Fin de funciones
@@ -80,7 +81,7 @@ class Lexer:
             ('NEWLINE', r'\n'),  # Nueva línea
             ('SKIP', r'[ \t]+'),  # Espacios y tabulaciones
             ('LCURLYBRACK', r'\{'),  # Llave izquierda
-            ('DCURLYBRACK', r'\}'),  # Llave derecha
+            ('DCURLYBRACK', r'\}'),
             ('MISMATCH', r'.'),  # Cualquier otro carácter no esperado
         ]
         self.token_regex = '|'.join('(?P<%s>%s)' % pair for pair in self.token_specification)

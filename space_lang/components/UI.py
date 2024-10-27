@@ -21,7 +21,7 @@ class CodeExecutorUI:
             "endAndromeda", "stardock", "endStardock", "stardust", "stardock",
             "stellar_add", "stellar_remove", "stellar_size", "stellar_place","Constellation",
             "Astro","astro_launch","astro_reentry","astro_orbittop","astro_isvacuum","astro_count",
-            "Nebula","nebula_eventHorizon","nebula_lightSpeed","nebula_core","nebula_isVacuum","nebula_cosmicFlow","sun","moon", "endMoon" ,"and"      
+            "Nebula","nebula_eventHorizon","nebula_lightSpeed","nebula_core","nebula_isVacuum","nebula_cosmicFlow","sun","moon", "endMoon" ,"and", "nextPlanet"       
         ]
 
         self.setup_ui()
@@ -109,58 +109,72 @@ class CodeExecutorUI:
         self.result_display.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         self.result_display.tag_configure("output", foreground="#b5cea8")
         self.result_display.tag_configure("error", foreground="#ff5555")
-
+        
     def create_menu(self):
         menu_bar = Menu(self.root, bg="#333333", fg="#FFD700", activebackground="#212121", activeforeground="#FFD700", relief="flat", font=("Helvetica", 10))
+
+        # Crear el menú principal "Insertar"
         insert_menu = Menu(menu_bar, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
 
-        insert_menu.add_command(label="Declaración de enteros", command=self.structs.insert_int_declaration)
-        insert_menu.add_command(label="Declaración de flotantes", command=self.structs.insert_float_declaration)
-        insert_menu.add_command(label="Declaración de dobles", command=self.structs.insert_double_declaration)
-        insert_menu.add_command(label="Declaración de cadena", command=self.structs.insert_string_declaration)
-        insert_menu.add_command(label="Declaración de booleanos", command=self.structs.insert_bool_declaration)
-        insert_menu.add_command(label="Condicional", command=self.structs.insert_conditional_structure)
-        insert_menu.add_command(label="Suma de enteros", command=self.structs.insert_int_sum)
-        insert_menu.add_command(label="Suma de flotantes", command=self.structs.insert_float_sum)
-        insert_menu.add_command(label="Multiplicación de dobles", command=self.structs.insert_double_mul)
-        insert_menu.add_command(label="Bucle", command=self.structs.insert_loop_structure)
-        insert_menu.add_command(label="Declaración de vector", command=self.structs.insert_vector_declaration)
-        insert_menu.add_command(label="Impresión del vector", command=self.structs.insert_vector_print)
-        insert_menu.add_command(label="Declaración de la lista", command=self.structs.insert_list_declaration)
-        insert_menu.add_command(label="Impresión de la lista", command=self.structs.insert_list_print)
-        insert_menu.add_command(label="Selector de Variable", command=self.structs.insert_Input_print)
-        insert_menu.add_command(label="Switch", command=self.structs.insert_switch_structure)
-        insert_menu.add_command(label="Función", command=self.structs.insertFunction)
-        insert_menu.add_command(label="Añadir elemento a la lista", command=self.structs.insert_stellar_add)
-        insert_menu.add_command(label="Eliminar elemento de la lista", command=self.structs.insert_stellar_remove)   
-        insert_menu.add_command(label="Obtener tamaño de la lista", command=self.structs.insert_stellar_size)    
-        insert_menu.add_command(label="Insertar en la lista", command=self.structs.insert_stellar_place)
+        # Submenú de Declaraciones
+        declarations_menu = Menu(insert_menu, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
+        declarations_menu.add_command(label="Declaración de enteros", command=self.structs.insert_int_declaration)
+        declarations_menu.add_command(label="Declaración de flotantes", command=self.structs.insert_float_declaration)
+        declarations_menu.add_command(label="Declaración de dobles", command=self.structs.insert_double_declaration)
+        declarations_menu.add_command(label="Declaración de cadena", command=self.structs.insert_string_declaration)
+        declarations_menu.add_command(label="Declaración de booleanos", command=self.structs.insert_bool_declaration)
+        declarations_menu.add_command(label="Declaración de vector", command=self.structs.insert_vector_declaration)
+        declarations_menu.add_command(label="Declaración de lista", command=self.structs.insert_list_declaration)
+        declarations_menu.add_command(label="Declaración de pila", command=self.structs.insert_astro_declaration)
+        declarations_menu.add_command(label="Declaración de cola", command=self.structs.insert_nebula_declaration)
 
-        insert_menu.add_command(label="Declaración de pila", command=self.structs.insert_astro_declaration)
-        insert_menu.add_command(label="Método push de pila", command=self.structs.insert_astro_push)
-        insert_menu.add_command(label="Método pop de pila", command=self.structs.insert_astro_pop)
-        insert_menu.add_command(label="Método top de pila", command=self.structs.insert_astro_top)
-        insert_menu.add_command(label="Método es vacio de pila", command=self.structs.insert_astro_empty)
-        insert_menu.add_command(label="Obtener tamaño de la pila", command=self.structs.insert_astro_size)
+        # Submenú de Estructuras
+        structures_menu = Menu(insert_menu, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
+        structures_menu.add_command(label="Bucle", command=self.structs.insert_loop_structure)
+        structures_menu.add_command(label="Condicional", command=self.structs.insert_conditional_structure)
+        structures_menu.add_command(label="Switch", command=self.structs.insert_switch_structure)
+        structures_menu.add_command(label="Impresión del vector", command=self.structs.insert_vector_print)
+        structures_menu.add_command(label="Impresión de la lista", command=self.structs.insert_list_print)
+        structures_menu.add_command(label="Añadir elemento a la lista", command=self.structs.insert_stellar_add)
+        structures_menu.add_command(label="Eliminar elemento de la lista", command=self.structs.insert_stellar_remove)
+        structures_menu.add_command(label="Obtener tamaño de la lista", command=self.structs.insert_stellar_size)
+        structures_menu.add_command(label="Insertar en la lista", command=self.structs.insert_stellar_place)
+        structures_menu.add_command(label="Método push de pila", command=self.structs.insert_astro_push)
+        structures_menu.add_command(label="Método pop de pila", command=self.structs.insert_astro_pop)
+        structures_menu.add_command(label="Método top de pila", command=self.structs.insert_astro_top)
+        structures_menu.add_command(label="Método es vacío de pila", command=self.structs.insert_astro_empty)
+        structures_menu.add_command(label="Obtener tamaño de la pila", command=self.structs.insert_astro_size)
+        structures_menu.add_command(label="Método enqueue de cola", command=self.structs.insert_nebula_enqueue)
+        structures_menu.add_command(label="Método dequeue de cola", command=self.structs.insert_nebula_dequeue)
+        structures_menu.add_command(label="Método front de cola", command=self.structs.insert_nebula_front)
+        structures_menu.add_command(label="Método es vacío de cola", command=self.structs.insert_nebula_empty)
+        structures_menu.add_command(label="Obtener tamaño de la cola", command=self.structs.insert_nebula_size)
 
-        insert_menu.add_command(label="Declaración de cola", command=self.structs.insert_nebula_declaration)
-        insert_menu.add_command(label="Método queue de cola", command=self.structs.insert_nebula_enqueue)
-        insert_menu.add_command(label="Método dequeue de cola", command=self.structs.insert_nebula_dequeue)
-        insert_menu.add_command(label="Método front de cola", command=self.structs.insert_nebula_front)
-        insert_menu.add_command(label="Método es vacio de cola", command=self.structs.insert_nebula_empty)
-        insert_menu.add_command(label="Obtener tamaño de la cola", command=self.structs.insert_nebula_size)
+        # Submenú de Funciones
+        functions_menu = Menu(insert_menu, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
+        functions_menu.add_command(label="Función moon (void)", command=self.structs.insert_moon_function)
+        functions_menu.add_command(label="Función suma de enteros", command=self.structs.insert_int_function)
+        functions_menu.add_command(label="Función suma de cadenas", command=self.structs.insert_string_function)
+        functions_menu.add_command(label="Función suma de booleanos", command=self.structs.insert_bool_function)
+        functions_menu.add_command(label="Función suma de flotantes", command=self.structs.insert_float_function)
+        functions_menu.add_command(label="Función suma de dobles", command=self.structs.insert_double_function)
 
-        insert_menu.add_command(label="Declarar Constellation y bucle", command=self.structs.insert_constellation_and_loop)
-        insert_menu.add_command(label="Función moon (void)", command=self.structs.insert_moon_function)
-        insert_menu.add_command(label="Función suma de enteros", command=self.structs.insert_int_function)
-        insert_menu.add_command(label="Función suma de cadenas", command=self.structs.insert_string_function)
-        insert_menu.add_command(label="Función suma de booleanos", command=self.structs.insert_bool_function)
-        insert_menu.add_command(label="Función suma de flotantes", command=self.structs.insert_float_function)
-        insert_menu.add_command(label="Función suma de dobles", command=self.structs.insert_double_function)
+        # Submenú de Casting
+        casting_menu = Menu(insert_menu, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
+        casting_menu.add_command(label="Casteos", command=self.structs.insert_casting_example)
 
-                
+        # Agregar los submenús al menú "Insertar"
+        insert_menu.add_cascade(label="Declaraciones", menu=declarations_menu)
+        insert_menu.add_cascade(label="Estructuras", menu=structures_menu)
+        insert_menu.add_cascade(label="Funciones", menu=functions_menu)
+        insert_menu.add_cascade(label="Casting", menu=casting_menu)
+
+        # Agregar el menú "Insertar" al menú principal
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)
+
+        # Configurar la barra de menú en la raíz de la ventana
         self.root.config(menu=menu_bar)
+
 
     def on_key_release(self, event):
         """Maneja el autocompletado y el resaltado de sintaxis."""
@@ -180,7 +194,7 @@ class CodeExecutorUI:
         self.code_input.tag_remove("string_var", "1.0", tk.END)
         self.code_input.tag_remove("bool", "1.0", tk.END)
 
-        keywords = r"\b(planet|star|sun|moon|endMoon|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar|stellar_add|stellar_remove|stellar_size|stellar_place|Constellation|Astro|astro_launch|astro_reentry|astro_orbitTop|astro_isVacuum|astro_count|Nebula|nebula_eventHorizon|nebula_lightSpeed|nebula_core|nebula_isVacuum|nebula_cosmicFlow)\b"
+        keywords = r"\b(planet|star|sun|moon|nextPlanet|endMoon|starcatch|orbit|stardock|endStardock|endOrbit|supernova|endSupernova|perseids|endPerseids|meteor|endMeteor|commet|endCommet|andromeda|endAndromeda|stardust|suma|Stellar|stellar_add|stellar_remove|stellar_size|stellar_place|Constellation|Astro|astro_launch|astro_reentry|astro_orbitTop|astro_isVacuum|astro_count|Nebula|nebula_eventHorizon|nebula_lightSpeed|nebula_core|nebula_isVacuum|nebula_cosmicFlow)\b"
         integers = r"\b\d+\b" 
         floats = r"\b\d+\.\d+\b" 
         booleans = r"\b((?i:true)|(?i:false))\b"  

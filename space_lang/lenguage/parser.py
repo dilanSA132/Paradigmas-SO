@@ -21,17 +21,17 @@ class Parser:
 
         if token[0] == 'PLANET':
             self.pos += 1
-            var_type = self.tokens[self.pos][0]  
+            var_type = self.tokens[self.pos][0].lower()  # Captura el tipo de destino
             self.pos += 1
-            var_name = self.tokens[self.pos][1]  
+            var_name = self.tokens[self.pos][1]
             self.pos += 1
             if self.tokens[self.pos][0] == 'ASSIGN':
                 self.pos += 1
-                expr = self.parse_expression()
+                expr = self.parse_expression(var_type=var_type)  # Pasa el tipo de destino a la expresión
 
                 if self.tokens[self.pos][0] == 'END':
                     self.pos += 1
-                return ('assign', var_type, var_name, expr) 
+                return ('assign', var_type, var_name, expr)  # Retorna el nodo de asignación
         
         elif token[0] == 'CONSTELLATION':
             self.pos += 1
@@ -424,8 +424,21 @@ class Parser:
             right = self.parse_expression()
             left = (op.lower(), left, right)
         return left
+    
+    def parse_expression(self, var_type=None):
+        if self.tokens[self.pos][0] == 'NEXTPLANET':
+            self.pos += 1
+            if self.tokens[self.pos][0] == 'LPAREN':
+                self.pos += 1
+                expr = self.parse_expression() 
+                if self.tokens[self.pos][0] != 'RPAREN':
+                    raise SyntaxError(f"Expected ']', but got {self.tokens[self.pos]}")
+                self.pos += 1
+                target_type = var_type 
+                if target_type is None:
+                    raise SyntaxError("Target type for nextPlanet casting is not specified.")
+                return ('cast', target_type, expr)  
 
-    def parse_expression(self):
         left = self.parse_term()
         while self.pos < len(self.tokens) and self.tokens[self.pos][0] in ('PLUS', 'MINUS'):
             op = self.tokens[self.pos][0]
@@ -433,6 +446,15 @@ class Parser:
             right = self.parse_term()
             left = (op.lower(), left, right)
         return left
+
+    
+    def get_current_var_type(self):
+        """Obtener el tipo de la variable a la que se está asignando, si es aplicable"""
+        if self.pos > 1 and self.tokens[self.pos - 2][0] == 'PLANET':
+            return self.tokens[self.pos - 1][0].lower() 
+        return None
+
+
 
     def parse_term(self):
         left = self.parse_factor()
@@ -450,7 +472,7 @@ class Parser:
             next_token = self.tokens[self.pos]
             if next_token[0] == 'NUMBER':
                 self.pos += 1
-                return ('num', -int(next_token[1]))  # Manejar el número negativo
+                return ('num', -int(next_token[1]))
             else:
                 raise SyntaxError(f"Expected a number after '-', but got {next_token} at position {self.pos}")
         self.pos += 1

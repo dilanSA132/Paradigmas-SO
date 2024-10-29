@@ -163,11 +163,15 @@ class CodeExecutorUI:
         casting_menu = Menu(insert_menu, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
         casting_menu.add_command(label="Casteos", command=self.structs.insert_casting_example)
 
+        # Submenú de Ejemplos
+        examples_menu = Menu(insert_menu, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
+        examples_menu.add_command(label="Calculadora", command=self.structs.insertCalculator)
         # Agregar los submenús al menú "Insertar"
         insert_menu.add_cascade(label="Declaraciones", menu=declarations_menu)
         insert_menu.add_cascade(label="Estructuras", menu=structures_menu)
         insert_menu.add_cascade(label="Funciones", menu=functions_menu)
         insert_menu.add_cascade(label="Casting", menu=casting_menu)
+        insert_menu.add_cascade(label="Ejemplos", menu=examples_menu)
 
         # Agregar el menú "Insertar" al menú principal
         menu_bar.add_cascade(label="Insertar", menu=insert_menu)

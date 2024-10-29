@@ -10,7 +10,7 @@ class Structs:
         self.code_input.insert(tk.INSERT, loop_code)
 
     def insert_conditional_structure(self):
-        conditional_code = "stardock var1 < var2.\n    star \"Condición verdadera\" var1.\nendStardock.\n"
+        conditional_code = "stardock var1 < var2.\n    star \"Menor \" var1.\nendStardock.\nsupernova.\n  star \"Menor \" var2.\nendSupernova.\n"
         self.code_input.insert(tk.INSERT, conditional_code)
 
     def insert_variable_declaration(self):
@@ -200,4 +200,75 @@ class Structs:
         planet mars boolVar = nextPlanet[strVar].  # Casteo explícito de string a booleano
         star "Valor casteado" boolVar.
     """
+        self.code_input.insert(tk.INSERT, code)
+    
+    def insertCalculator(self):
+        code = """andromeda mercury add[planet mercury a,planet mercury b]:
+    planet mercury result = a + b.
+    stardust result.
+endAndromeda
+
+andromeda mercury subtract[planet mercury a,planet mercury b]:
+    planet mercury result = a - b.
+    stardust result.
+endAndromeda
+
+andromeda mercury multiply[planet mercury a,planet mercury b]:
+    planet mercury result = a * b.
+    stardust result.
+endAndromeda
+
+andromeda mercury divide[planet mercury a, planet mercury b]:
+    stardock b == 0.
+        star "Can´t divide by zero".
+    planet mercury result = 0.0.
+        endStardock.
+        supernova.
+        planet mercury result = a / b.
+    endSupernova. 
+    stardust result.
+endAndromeda
+
+moon print_result[planet mercury result]:
+    star "Result is: " result.
+endMoon
+
+moon calculator[planet mercury x, planet mercury y, planet venus operation]:
+
+    perseids operation.
+        meteor "+".
+            planet mercury result = add[x, y].
+        endMeteor.
+        meteor "-".
+            planet mercury result = subtract[x, y].
+        endMeteor.
+        meteor "*".
+            planet mercury result = multiply[x, y].
+        endMeteor.
+        meteor "/".
+            planet mercury result = divide[x, y].
+        endMeteor.
+        commet.
+            star "Invalid operation.".
+        planet mercury result = 0.0.
+        endCommet.
+    endPerseids.
+
+    sun print_result[result].
+endMoon
+
+
+star "--- Calculadora ---".
+    planet mercury x = 0.0.
+    planet mercury y = 0.0.
+    
+    planet venus operation = "+".
+
+    starcatch "Enter first number: " x.
+    starcatch "Enter second number: " y. 
+
+    starcatch "Choose operation + - / * " operation.
+
+sun calculator[x,y,operation].
+"""
         self.code_input.insert(tk.INSERT, code)

@@ -85,13 +85,23 @@ class CodeExecutor:
     def show_results(self, results):
         self.result_display.config(state="normal")
         self.result_display.delete("1.0", "end")
+        
         if results:
-            for result in results:
-                self.result_display.insert("end", f"{result}\n", "output")
+            self.display_result_line(results, 0)  # Comienza con el primer resultado
         else:
             self.result_display.insert("end", "No se ha obtenido un resultado.\n", "output")
+        
         self.result_display.config(state="disabled")
 
+    def display_result_line(self, results, index):
+        """Función auxiliar para mostrar cada línea de resultado progresivamente."""
+        if index < len(results):
+            self.result_display.config(state="normal")  
+            self.result_display.insert("end", f"{results[index]}\n", "output")
+            self.result_display.see("end")  
+            self.result_display.config(state="disabled")  
+            self.result_display.after(1000, lambda: self.display_result_line(results, index + 1))
+    
     def display_error(self, error_message):
         self.result_display.config(state="normal")
         self.result_display.delete("1.0", "end")

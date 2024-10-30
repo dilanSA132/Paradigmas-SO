@@ -272,3 +272,30 @@ star "--- Calculadora ---".
 sun calculator[x,y,operation].
 """
         self.code_input.insert(tk.INSERT, code)
+
+    def insertSort(self):
+        code = """
+Stellar list = [6, 8, 2, 4, 1, 5, 6, 5, 3, 245, 6, 743, 5, 4, 6, 1346, 6, 1, 2, 987, 453, 32, 91, 21, 73, 67, 19, 38, 555, 320, 89, 12, 47, 63, 101, 333, 404, 159, 26, 88, 420, 17, 34, 66, 312, 234, 567, 789, 654, 876, 123, 345, 2345, 876, 543, 21, 432, 765, 567, 89, 987, 201, 345, 675, 189, 320, 457, 612, 104, 98, 73, 54, 33, 29, 16, 11, 95, 64, 88, 72, 13, 97, 91, 22, 27, 78, 36, 59, 44, 83, 17, 5, 42, 31, 60, 92, 71, 90, 69, 58, 41].
+
+moon sort[]:
+planet earth length = stellar_size list.
+star "" length.
+   orbit j length-1 0 1.
+    	orbit i 0 length-2 1.
+	  star list.
+	  planet earth index = i+1.
+	  stardock list[i] > list[index].
+    		planet earth var = list[i].
+		stellar_remove list i.
+		stellar_place list i list[i].
+		stellar_remove list index.
+		stellar_place list index var.
+	   endStardock.
+	endOrbit.
+   endOrbit.
+star list.
+endMoon
+    
+sun sort[].
+"""
+        self.code_input.insert(tk.INSERT, code)

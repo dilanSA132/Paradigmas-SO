@@ -100,7 +100,7 @@ class CodeExecutor:
             self.result_display.insert("end", f"{results[index]}\n", "output")
             self.result_display.see("end")  
             self.result_display.config(state="disabled")  
-            self.result_display.after(1000, lambda: self.display_result_line(results, index + 1))
+            self.result_display.after(1, lambda: self.display_result_line(results, index + 1))
     
     def display_error(self, error_message):
         self.result_display.config(state="normal")

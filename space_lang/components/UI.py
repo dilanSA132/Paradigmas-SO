@@ -166,6 +166,7 @@ class CodeExecutorUI:
         # Submenú de Ejemplos
         examples_menu = Menu(insert_menu, tearoff=0, bg="#333333", fg="#FFD700", font=("Helvetica", 10))
         examples_menu.add_command(label="Calculadora", command=self.structs.insertCalculator)
+        examples_menu.add_command(label="Ordenamiento", command=self.structs.insertSort)
         # Agregar los submenús al menú "Insertar"
         insert_menu.add_cascade(label="Declaraciones", menu=declarations_menu)
         insert_menu.add_cascade(label="Estructuras", menu=structures_menu)

@@ -1,3 +1,6 @@
+import threading
+import time
+
 class Interpretar:
     def __init__(self, ast, input_callback):
         self.ast = ast
@@ -7,7 +10,7 @@ class Interpretar:
         self.debug_mode = True
         self.input_callback = input_callback
         self.current_function = None  
-
+    
     def evaluate(self):
         for node in self.ast:
             self.execute_statement(node)
@@ -29,7 +32,7 @@ class Interpretar:
 
             self.variables[var_name] = value  
             self.debug_print(f"Variable '{var_name}' assigned with value: {value}")
-            return value
+            #return value
 
 
 
@@ -37,7 +40,7 @@ class Interpretar:
             _, var_name, expr_list = statement
             value_list = [self.evaluate_expression(expr) for expr in expr_list]
             self.variables[var_name] = value_list
-            return value_list
+            #return value_list
 
         elif stmt_type == 'astro_launch':
             _, list_name, element = statement
@@ -522,12 +525,12 @@ class Interpretar:
         if start_value <= end_value:
             while i <= end_value:
                 self.variables[var_name] = i
-                self.execute_block(block)
+                self.execute_block_orbit(block)
                 i += interval_value
         else:
             while i >= end_value:
                 self.variables[var_name] = i
-                self.execute_block(block)
+                self.execute_block_orbit(block)
                 i -= interval_value
 
     def handle_parseids(self, statement):
@@ -548,6 +551,13 @@ class Interpretar:
             if return_value is not None: 
                 return return_value
         return return_value
+    def execute_block_orbit(self, block):
+        self.debug_print("Starting block execution")
+        for stmt in block:
+            self.debug_print(f"Executing statement: {stmt}")
+            result = self.execute_statement(stmt)
+            # No retornamos dentro del bucle para asegurar que cada instrucción se ejecute
+        self.debug_print("Finished block execution")
 
     def handle_stardock(self, statement):
         _, condition, true_block, false_block = statement
@@ -598,6 +608,10 @@ class Interpretar:
         elif expr_type == 'astro_count':
             list_name = expr[1]
             return self.astro_length(list_name)
+        elif expr_type == 'stellar_size':
+            list_name = expr[1]
+            return self.stellar_length(list_name)
+        
         elif expr_type == 'call_void_function':
             function_name = expr[1]
             args = expr[2]

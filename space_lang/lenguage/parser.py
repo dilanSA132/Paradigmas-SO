@@ -270,6 +270,7 @@ class Parser:
             interval_expr = self.parse_expression()
             self.pos += 1  
             block = self.parse_block('END_ORBIT')
+            print(block)
             return ('orbit', var_name, start_expr, end_expr, interval_expr, block)
 
         elif token[0] == 'PERSEIDS':
